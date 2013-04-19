@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -18,6 +19,18 @@ enum operations {
 	op_lessthanequal,
 	op_greaterthan,
 	op_greaterthanequal,
+};
+
+union operand {
+	char *variable_name;
+	unsigned int constant_num;
+};
+
+struct constraint {
+	enum operations op;
+	union operand operand1;
+	union operand operand2;
+	bool op1_is_variable, op2_is_variable;
 };
 
 void
