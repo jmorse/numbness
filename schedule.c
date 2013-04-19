@@ -83,6 +83,10 @@ void
 create_round_correct_constraints(void)
 {
 
+	// The constraints: that teams only appear once in the round (which
+	// also ensures they don't appear more than once in the same match),
+	// and that they /do/ appear in the round.
+
 	assert(0);
 }
 
