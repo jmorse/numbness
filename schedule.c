@@ -35,6 +35,7 @@ struct constraint {
 	bool op1_is_variable, op2_is_variable;
 };
 
+int teams, rounds;
 int matches_per_round;
 
 // List of contraints we've calculated
@@ -56,8 +57,26 @@ usage(const char *progname)
 void
 create_round_match_variables(void)
 {
+	int i, j, k;
 
-	assert(0);
+	// Lay out match variables, assign names.
+	schedule_variable_names = malloc(sizeof(void*) * rounds);
+	for (i = 0; i < rounds; i++) {
+		schedule_variable_names[i] = malloc(sizeof(void*)
+							* matches_per_round);
+		for (j = 0; j < matches_per_round; j++) {
+			schedule_variable_names[i][j] = malloc(sizeof(int) *
+							TEAMS_PER_MATCH);
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				schedule_variable_names[i][j][k] = malloc(128);
+				snprintf(schedule_variable_names[i][j][k], 127,
+						"round_%d::match_%d::slot_%d",
+						i, j, k);
+			}
+		}
+	}
+
+	return;
 }
 
 void
@@ -107,8 +126,6 @@ display_solved_model(void)
 int
 main(int argc, char **argv)
 {
-	int i, j, k;
-	int teams, rounds;
 
 	if (argc != 3)
 		usage(argv[0]);
@@ -130,23 +147,6 @@ main(int argc, char **argv)
 	matches_per_round = teams / rounds;
 	if (teams % rounds != 0)
 		matches_per_round++;
-
-	// Lay out match variables, assign names.
-	schedule_variable_names = malloc(sizeof(void*) * rounds);
-	for (i = 0; i < rounds; i++) {
-		schedule_variable_names[i] = malloc(sizeof(void*)
-							* matches_per_round);
-		for (j = 0; j < matches_per_round; j++) {
-			schedule_variable_names[i][j] = malloc(sizeof(int) *
-							TEAMS_PER_MATCH);
-			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				schedule_variable_names[i][j][k] = malloc(128);
-				snprintf(schedule_variable_names[i][j][k], 127,
-						"round_%d::match_%d::slot_%d",
-						i, j, k);
-			}
-		}
-	}
 
 	// Produce constraints ast
 	create_constraints();
