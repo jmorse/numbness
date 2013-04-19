@@ -5,6 +5,21 @@
 
 #define TEAMS_PER_MATCH 4
 
+// SMT structure: only variables are the round variables, identifying what
+// teams are in what rounds.
+// Formulas are all of integer or bool types; operations are only the normal
+// integer relations and equality. Operands are only ever one of the round
+// variables or a integer constant.
+
+enum operations {
+	op_equality = 0,
+	op_notequal,
+	op_lessthan,
+	op_lessthanequal,
+	op_greaterthan,
+	op_greaterthanequal,
+};
+
 void
 usage(const char *progname)
 {
