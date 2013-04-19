@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <sys/queue.h>
+
 #define TEAMS_PER_MATCH 4
 
 // SMT structure: only variables are the round variables, identifying what
@@ -32,6 +34,10 @@ struct constraint {
 	union operand operand2;
 	bool op1_is_variable, op2_is_variable;
 };
+
+// List of contraints we've calculated
+LIST_HEAD(, constraint) list_of_constraints;
+
 
 void
 usage(const char *progname)
