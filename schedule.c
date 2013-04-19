@@ -14,10 +14,33 @@ usage(const char *progname)
 }
 
 void
-create_constraints(void)
+create_round_match_variables(void)
 {
 
 	assert(0);
+}
+
+void
+create_round_correct_constraints(void)
+{
+
+	assert(0);
+}
+
+void
+create_goodness_constraints(void)
+{
+
+	assert(0);
+}
+
+void
+create_constraints(void)
+{
+
+	create_round_match_variables();
+	create_round_correct_constraints();
+	create_goodness_constraints();
 }
 
 void
