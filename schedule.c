@@ -34,6 +34,17 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	// Do some stuff
+	// Produce constraints ast
+	// Insert here: some SMT generation tool
+
+	// Pretty print those constraints to a solver
+	// Insert here: that
+
+	// Invoke the solver and get a result (or, perhaps, time out)
+	// La la la
+
+	// Extract the model of the schedule and print it.
+	// Ta ta ta
+
 	exit(EXIT_SUCCESS);
 }
