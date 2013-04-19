@@ -35,9 +35,15 @@ struct constraint {
 	bool op1_is_variable, op2_is_variable;
 };
 
+int matches_per_round;
+
 // List of contraints we've calculated
 LIST_HEAD(, constraint) list_of_constraints;
 
+// Three level array of match schedule variable names; the variables that define
+// who is in what match. First index -> the round, second index -> the match,
+// and third index -> the participants.
+char ****schedule_variable_names;
 
 void
 usage(const char *progname)
@@ -101,6 +107,7 @@ display_solved_model(void)
 int
 main(int argc, char **argv)
 {
+	int i, j, k;
 	int teams, rounds;
 
 	if (argc != 3)
@@ -118,6 +125,27 @@ main(int argc, char **argv)
 		fprintf(stderr, "%d is not an acceptable number of rounds\n",
 				rounds);
 		exit(EXIT_FAILURE);
+	}
+
+	matches_per_round = teams / rounds;
+	if (teams % rounds != 0)
+		matches_per_round++;
+
+	// Lay out match variables, assign names.
+	schedule_variable_names = malloc(sizeof(void*) * rounds);
+	for (i = 0; i < rounds; i++) {
+		schedule_variable_names[i] = malloc(sizeof(void*)
+							* matches_per_round);
+		for (j = 0; j < matches_per_round; j++) {
+			schedule_variable_names[i][j] = malloc(sizeof(int) *
+							TEAMS_PER_MATCH);
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				schedule_variable_names[i][j][k] = malloc(128);
+				snprintf(schedule_variable_names[i][j][k], 127,
+						"round_%d::match_%d::slot_%d",
+						i, j, k);
+			}
+		}
 	}
 
 	// Produce constraints ast
