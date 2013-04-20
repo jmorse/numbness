@@ -95,10 +95,29 @@ create_round_match_variables(void)
 void
 create_round_correct_constraints(void)
 {
+	int i, j, k;
 
 	// The constraints: that teams only appear once in the round (which
 	// also ensures they don't appear more than once in the same match),
 	// and that they /do/ appear in the round.
+
+	// Start off by constraining each match entry to be in the range of
+	// permissable teams.
+
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				struct constraint *c = malloc(sizeof(*c));
+				c->op = op_greaterthanequal;
+				c->operand1.variable_name =
+					schedule_variable_names[i][j][k];
+				c->operand2.constant_num = 0;
+				c->op1_is_variable = true;
+				c->op2_is_variable = false;
+				LIST_INSERT_HEAD(&list_of_constraints, c,entry);
+			}
+		}
+	}
 
 	assert(0);
 }
