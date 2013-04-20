@@ -47,6 +47,11 @@ int ***match_outcomes;
 // Not storing met-team variable names globally because they're likely to be
 // fairly transient.
 
+// Keep constants as global strings so that they can be changed as we change
+// logic.
+const char zero_str[] = "0";
+
+
 void
 usage(const char *progname)
 {
@@ -126,8 +131,9 @@ create_round_correct_constraints(void)
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				sprintf(scratch_buffer, "(assert (>= %s 0))\n",
-					schedule_variable_names[i][j][k]);
+				sprintf(scratch_buffer, "(assert (>= %s %s))\n",
+					schedule_variable_names[i][j][k],
+					zero_str);
 				scratch_to_constraint();
 				sprintf(scratch_buffer, "(assert (< %s %d))\n",
 					schedule_variable_names[i][j][k],
@@ -271,8 +277,8 @@ create_goodness_constraints(void)
 			// Store into the old buffer, at element elemcount,
 			// the value zero.
 			sprintf(scratch_buffer,
-					"(assert (= %s (store %s %d 0)))",
-					oldname, newname, elemcount);
+					"(assert (= %s (store %s %d %s)))",
+					oldname, newname, elemcount, zero_str);
 			scratch_to_constraint();
 			free(oldname);
 			oldname = newname;
