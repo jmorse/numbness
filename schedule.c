@@ -281,7 +281,16 @@ print_to_solver(void)
 	}
 
 	fprintf(outfile, "(check-sat)\n");
-	fprintf(outfile, "(get-model)\n");
+
+	// Fetch all variables
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				fprintf(outfile, "(get-value (%s))\n",
+					schedule_variable_names[i][j][k]);
+			}
+		}
+	}
 
 	fclose(outfile);
 	fprintf(stderr, "Done generating benchmark, at %s\n", output_file_name);
