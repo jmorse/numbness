@@ -176,6 +176,7 @@ print_to_solver(void)
 	fd = mkstemp(templ);
 	outfile = fdopen(fd, "w");
 	fprintf(outfile, "(set-info :status unknown)\n");
+	fprintf(outfile, "(set-option :produce-models true)\n");
 	fprintf(outfile, "(set-logic QF_AUFLIRA)\n");
 
 	// Declare a bunch of symbols,
@@ -196,6 +197,7 @@ print_to_solver(void)
 	}
 
 	fprintf(outfile, "(check-sat)\n");
+	fprintf(outfile, "(get-model)\n");
 
 	fclose(outfile);
 	printf("Done generating benchmark, at %s\n", templ);
