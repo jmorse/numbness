@@ -3,11 +3,11 @@ BEGIN{
 	bees="";
 }
 
-/^[ ]+\(define-fun.*Int$/{
+/^[ ]+\(define-fun.*round.*Int$/{
 	bees = $2;
 }
 
-/^[ ]+[0-9]+\)/{
+/^[ ]+[0-9]+\)$/{
 	match ($0, /^[ ]+([0-9]+)\)/, arr)
 	print bees " " arr[1];
 }
