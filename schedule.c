@@ -48,6 +48,21 @@ usage(const char *progname)
 }
 
 void
+del_output_file(void)
+{
+
+	unlink(output_file_name);
+}
+
+
+void
+del_input_file(void)
+{
+
+	unlink(input_file_name);
+}
+
+void
 scratch_to_constraint(void)
 {
 	struct constraint *c;
@@ -182,6 +197,7 @@ print_to_solver(void)
 		exit(EXIT_FAILURE);
 	}
 
+	atexit(del_output_file);
 	outfile = fdopen(fd, "w");
 	fprintf(outfile, "(set-info :status unknown)\n");
 	fprintf(outfile, "(set-option :produce-models true)\n");
@@ -227,6 +243,7 @@ solve_with_solver(void)
 		exit(EXIT_FAILURE);
 	}
 	close(fd);
+	atexit(del_input_file);
 
 	sprintf(scratch_buffer, "z3 -smt2 %s > %s", output_file_name,
 			input_file_name);
