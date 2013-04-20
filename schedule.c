@@ -23,6 +23,7 @@ int matches_per_round;
 
 // File where we'll be writing all the output gunge to
 char output_file_name[] = "/tmp/sr_schedule_XXXXXX";
+char input_file_name[] = "/tmp/sr_sched_solution_XXXXXX";
 
 struct constraint;
 struct constraint {
