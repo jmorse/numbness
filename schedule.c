@@ -35,11 +35,20 @@ struct constraint {
 	bool op1_is_variable, op2_is_variable;
 };
 
+struct logic_constraint {
+	enum operations op;
+	LIST_HEAD(,constraint) operands; // All of which evaluate to bool
+};
+
 int teams, rounds;
 int matches_per_round;
 
 // List of contraints we've calculated
 LIST_HEAD(, constraint) list_of_constraints;
+
+// List of additional logic contraints -- things with huge lists of operands,
+// that only have boolean values and only result in boolean values.
+LIST_HEAD(, constraint) list_of_logic_constraints;
 
 // Three level array of match schedule variable names; the variables that define
 // who is in what match. First index -> the round, second index -> the match,
