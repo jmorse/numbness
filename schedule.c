@@ -10,8 +10,7 @@
 #define TEAMS_PER_MATCH 4
 
 // SMT structure: only variables are the round variables, identifying what
-// teams are in what rounds. Also: an array per round, with the domain the
-// team number, and the range the number of matches they've had this round.
+// teams are in what rounds.
 //
 // Tried to define some structures that munged these things, but it's pointless
 // to ensure such rigidity without a proper API: instead, lets just print text
@@ -35,12 +34,6 @@ LIST_HEAD(, constraint) list_of_constraints;
 // who is in what match. First index -> the round, second index -> the match,
 // and third index -> the participants.
 char ****schedule_variable_names;
-
-// Names of arrays storing how many matches a team has had per round.
-char **schedule_round_array_names;
-
-// How many times that's been modified over time
-int *schedule_round_array_bump_count;
 
 void
 usage(const char *progname)
@@ -66,22 +59,6 @@ scratch_to_constraint(void)
 	return;
 }
 
-char *
-bump_round_array(int i)
-{
-	// Returns the name of the current round array variable; updates the
-	// one stored in the global table. One can then construct some syntax
-	// from the two and make an assertion.
-	// Caller must free the returned memory.
-
-	char *ret = strdup(schedule_round_array_names[i]);
-	free(schedule_round_array_names[i]);
-	sprintf(scratch_buffer, "round_%d_team_array_%d", i,
-			++schedule_round_array_bump_count[i]);
-	schedule_round_array_names[i] = strdup(scratch_buffer);
-	return ret;
-}
-
 void
 create_round_match_variables(void)
 {
@@ -102,16 +79,6 @@ create_round_match_variables(void)
 						i, j, k);
 			}
 		}
-	}
-
-	// For every round create an array storing how many times we've
-	// had a team feature. All initialzed to zero.
-	schedule_round_array_bump_count = malloc(sizeof(int) * rounds);
-	schedule_round_array_names = malloc(sizeof(char *) * rounds);
-	for (i = 0; i < rounds; i++) {
-		sprintf(scratch_buffer, "round_%d_team_array_0", i);
-		schedule_round_array_names[i] = strdup(scratch_buffer);
-		schedule_round_array_bump_count[i] = 0;
 	}
 
 	return;
@@ -150,51 +117,23 @@ create_round_correct_constraints(void)
 	// per round, fields nondeterministically updated, must all equal one?
 	// That probably works and scales.
 
-	// For each round, store zeros in each element per team, by assertion.
-	for (i = 0; i < rounds; i++) {
-		for (j = 0; j < teams; j++) {
-			char *name = schedule_round_array_names[i];
-			sprintf(scratch_buffer,
-					"(assert (= 0 (select %s %d)))\n",
-					name, j);
-			scratch_to_constraint();
-		}
-	}
+	// Or we could just state that they're all distinct...
 
-	// Now for each team in each match, increment the corresponding element
-	// by one.
 	for (i = 0; i < rounds; i++) {
+		sprintf(scratch_buffer, "(assert (distinct ");
 		for (j = 0; j < matches_per_round; j++) {
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				char *firstname = bump_round_array(i);
-				char *secondname =schedule_round_array_names[i];
-
-				// Encode the increment
-				sprintf(scratch_buffer,
-					"(assert (= %s (" // Assign to variable,
-					"store %s %s (" // Array w/ updated elem
-					"+ (select %s %s) 1" // curval + 1
-					"))))\n", // suffix
-					secondname, firstname,
-					schedule_variable_names[i][j][k],
-					firstname,
+				strcat(scratch_buffer,
 					schedule_variable_names[i][j][k]);
-				scratch_to_constraint();
+				strcat(scratch_buffer, " ");
 			}
 		}
+
+		strcat(scratch_buffer, "))\n");
+
+		scratch_to_constraint();
 	}
 
-	// And now, assert that at the end of all this, all rounds have all
-	// teams playing exactly once.
-	for (i = 0; i < rounds; i++) {
-		char *arrname = schedule_round_array_names[i];
-		for (j = 0; j < teams; j++) {
-			sprintf(scratch_buffer,
-					"(assert (= 1 (select %s %d)))\n",
-					arrname, j);
-			scratch_to_constraint();
-		}
-	}
 
 	return;
 }
@@ -248,16 +187,6 @@ print_to_solver(void)
 				fprintf(outfile, "(declare-fun %s () Int)\n",
 					schedule_variable_names[i][j][k]);
 			}
-		}
-	}
-
-	// Then the round arrays
-	for (i = 0; i < rounds; i++) {
-		for (j = 0; j <= schedule_round_array_bump_count[i]; j++) {
-			fprintf(outfile,
-				"(declare-fun round_%d_team_array_%d () "
-				"(Array Int Int))\n",
-				i, j);
 		}
 	}
 
