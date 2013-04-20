@@ -50,7 +50,7 @@ int ***match_outcomes;
 // Keep constants as global strings so that they can be changed as we change
 // logic.
 const char zero_str[] = "0";
-
+const char int_sort[] = "Int";
 
 void
 usage(const char *progname)
@@ -345,8 +345,9 @@ print_to_solver(void)
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				fprintf(outfile, "(declare-fun %s () Int)\n",
-					schedule_variable_names[i][j][k]);
+				fprintf(outfile, "(declare-fun %s () %s)\n",
+					schedule_variable_names[i][j][k],
+					int_sort);
 			}
 		}
 	}
