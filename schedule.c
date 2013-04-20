@@ -10,7 +10,9 @@
 #define TEAMS_PER_MATCH 4
 
 // SMT structure: only variables are the round variables, identifying what
-// teams are in what rounds.
+// teams are in what rounds. Also: an array per round, with the domain the
+// team number, and the range the number of matches they've had this round.
+//
 // Tried to define some structures that munged these things, but it's pointless
 // to ensure such rigidity without a proper API: instead, lets just print text
 // and store constraints as text.
@@ -33,6 +35,12 @@ LIST_HEAD(, constraint) list_of_constraints;
 // who is in what match. First index -> the round, second index -> the match,
 // and third index -> the participants.
 char ****schedule_variable_names;
+
+// Names of arrays storing how many matches a team has had per round.
+char **schedule_round_array_names;
+
+// How many times that's been modified over time
+int *schedule_round_array_bump_count;
 
 void
 usage(const char *progname)
@@ -78,6 +86,15 @@ create_round_match_variables(void)
 						i, j, k);
 			}
 		}
+	}
+
+	// For every round create an array storing how many times we've
+	// had a team feature. All initialzed to zero.
+	schedule_round_array_bump_count = malloc(sizeof(int) * rounds);
+	for (i = 0; i < rounds; i++) {
+		sprintf(scratch_buffer, "round_%d_team_array#0", i);
+		schedule_round_array_names[i] = strdup(scratch_buffer);
+		schedule_round_array_bump_count[i] = 0;
 	}
 
 	return;
