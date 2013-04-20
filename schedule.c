@@ -107,6 +107,7 @@ create_round_match_variables(void)
 	// For every round create an array storing how many times we've
 	// had a team feature. All initialzed to zero.
 	schedule_round_array_bump_count = malloc(sizeof(int) * rounds);
+	schedule_round_array_names = malloc(sizeof(char *) * rounds);
 	for (i = 0; i < rounds; i++) {
 		sprintf(scratch_buffer, "round_%d_team_array#0", i);
 		schedule_round_array_names[i] = strdup(scratch_buffer);
