@@ -22,7 +22,8 @@ variable.
 this operation, most of which alas are not fully open source. Z3 is open, but
 not under an OSI approved license. Boolector is GPL3, but won't work with the
 current formulation of the problem (which could be changed), and might not
-currently support extracting the satisfying assignments.
+currently support extracting the satisfying assignments. CVC{3,4} turns out to
+be MIT actually, woot.
 
 The schedule is made in a series of rounds; i.e., we have a small set of matches
 in which each team participates once, and the whole schedule is made up of
