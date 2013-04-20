@@ -226,6 +226,21 @@ create_goodness_constraints(void)
 		} // End of one period
 	} // End of one round boundry
 
+	// Facing a range of teams -- this is fundementally a rounds/teams
+	// ratio, seeing how 3 rounds with 100 teams won't allow you to meet
+	// everyone.
+	//
+	// So instead, we'll attempt to measure it as a proportion of the
+	// number of teams versus the number of teams you can face. There's
+	// no way to just 'optimise for this', we set a minimum and see if
+	// it's satisfiable. Floating point arith becomes necessary, alas,
+	// but we can keep it out of the formula. The range is from zero
+	// (no attempt to make you meet people) to 1.0 (meet everyone).
+	//
+	// After ensuring you've met everyone, another facet is ensuring you
+	// don't meet the same people repeatedly, which can be addressed later
+	// (and is likely to be much easier).
+
 	return;
 }
 
