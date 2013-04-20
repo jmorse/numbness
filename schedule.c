@@ -21,6 +21,9 @@ char scratch_buffer[0x100000]; // 1Mb of text buffer should be enough for anyone
 int teams, rounds;
 int matches_per_round;
 
+// File where we'll be writing all the output gunge to
+char output_file_name[] = "/tmp/sr_schedule_XXXXXX";
+
 struct constraint;
 struct constraint {
 	char *string;
@@ -162,7 +165,6 @@ create_constraints(void)
 void
 print_to_solver(void)
 {
-	char templ[] = "sr_schedule_XXXXXX";
 	int fd, i, j, k;
 	FILE *outfile;
 	struct constraint *ptr;
@@ -173,7 +175,7 @@ print_to_solver(void)
 	// Worry about streaming data into it later if we get onto incremental
 	// SMT.
 
-	fd = mkstemp(templ);
+	fd = mkstemp(output_file_name);
 	outfile = fdopen(fd, "w");
 	fprintf(outfile, "(set-info :status unknown)\n");
 	fprintf(outfile, "(set-option :produce-models true)\n");
@@ -200,7 +202,7 @@ print_to_solver(void)
 	fprintf(outfile, "(get-model)\n");
 
 	fclose(outfile);
-	printf("Done generating benchmark, at %s\n", templ);
+	printf("Done generating benchmark, at %s\n", output_file_name);
 }
 
 void
