@@ -176,6 +176,17 @@ create_round_correct_constraints(void)
 		}
 	}
 
+	// And now, assert that at the end of all this, all rounds have all
+	// teams playing exactly once.
+	for (i = 0; i < rounds; i++) {
+		char *arrname = schedule_round_array_names[i];
+		for (j = 0; j < teams; j++) {
+			sprintf(scratch_buffer,
+					"(assert (= 1 (select %s %d)))\n",
+					arrname, j);
+			scratch_to_constraint();
+		}
+	}
 
 	assert(0);
 }
