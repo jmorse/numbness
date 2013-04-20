@@ -350,6 +350,7 @@ display_solved_model(void)
 			for (k = 1; k < TEAMS_PER_MATCH; k++) {
 				printf("|%d", match_outcomes[i][j][k]);
 			}
+			printf("\n");
 		}
 	}
 }
