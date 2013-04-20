@@ -307,8 +307,8 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	matches_per_round = teams / rounds;
-	if (teams % rounds != 0)
+	matches_per_round = teams / TEAMS_PER_MATCH;
+	if (teams % TEAMS_PER_MATCH != 0)
 		matches_per_round++;
 
 	// Produce constraints ast
