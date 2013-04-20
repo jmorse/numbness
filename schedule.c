@@ -257,14 +257,14 @@ create_goodness_constraints(void)
 	// Create some tracking arrays, zero initialize them.
 	for (i = 0; i < teams; i++) {
 		int elemcount = 0;
-		sprintf(scratch_buffer, "met_teams_array_round_Z_slot_Z");
+		sprintf(scratch_buffer, "met_teams_%d_array_round_Z_slot_Z", i);
 		char *oldname = strdup(scratch_buffer);
 		char *newname = NULL;
 
 		for (elemcount = 0; elemcount < teams; elemcount++) {
 			sprintf(scratch_buffer,
-					"met_teams_array_round_Z_slot_%d",
-					elemcount);
+					"met_teams_%d_array_round_Z_slot_%d",
+					i, elemcount);
 			newname = strdup(scratch_buffer);
 
 			// Store into the old buffer, at element elemcount,
