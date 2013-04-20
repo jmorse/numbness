@@ -28,16 +28,20 @@ union operand {
 	unsigned int constant_num;
 };
 
+struct constraint;
 struct constraint {
 	enum operations op;
 	union operand operand1;
 	union operand operand2;
 	bool op1_is_variable, op2_is_variable;
+	LIST_ENTRY(constraint) entry;
 };
 
+struct logic_constraint;
 struct logic_constraint {
 	enum operations op;
 	LIST_HEAD(,constraint) operands; // All of which evaluate to bool
+	LIST_ENTRY(constraint) entry;
 };
 
 int teams, rounds;
