@@ -168,6 +168,16 @@ create_goodness_constraints(void)
 	// some good distance between matches, that they face a reasonable
 	// range of other teams.
 
+	// Rather than trying to calculate numbers of matches using integer
+	// addition, which is relatively expensive, we can in fact just use
+	// distinct again: ensure that, across the edges of rounds, all the
+	// teams playing are distinct. This preserves the condition that matches
+	// are sufficiently seperate over that period, without resorting to
+	// any additional logic.
+
+	// So: for each N-match period that covers the boundry of a round,
+	// apply a distinct to all the slots in it.
+
 	return;
 }
 
