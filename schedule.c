@@ -305,8 +305,8 @@ solve_with_solver(void)
 	close(fd);
 	atexit(del_input_file);
 
-	sprintf(scratch_buffer, "z3 -smt2 %s > %s", output_file_name,
-			input_file_name);
+	sprintf(scratch_buffer,"/home/jmorse/phd/cvc/cvc4-1.0-x86_64-linux-opt --smtlib-strict %s > %s",
+			output_file_name, input_file_name);
 	result = system(scratch_buffer);
 	if (result == -1) {
 		perror("Couldn't fork to run solver");
@@ -318,7 +318,8 @@ solve_with_solver(void)
 		exit(EXIT_FAILURE);
 	}
 
-	if (WEXITSTATUS(result) != 0) {
+	// CVC elects to return 10 on SAT result, the rapscallion.
+	if (WEXITSTATUS(result) != 10) {
 		fprintf(stderr, "Solver exited with status %d, SMT syntax "
 				"probably broken, please inspect\n",
 				WEXITSTATUS(result));
