@@ -188,7 +188,7 @@ create_round_correct_constraints(void)
 		}
 	}
 
-	assert(0);
+	return;
 }
 
 void
