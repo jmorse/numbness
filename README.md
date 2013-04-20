@@ -1,4 +1,4 @@
-= Yet another SR match scheduler =
+## Yet another SR match scheduler ##
 
 Usage: schedule ${num-teams} ${num-rounds}
 
@@ -13,8 +13,8 @@ The format for this logic is [SMTLIB](http://smtlib.org) v2, which I might just
 have become familiar with due to my PhD. The input is a list of variables,
 and a list of constraints (assertions) about the values in those variables.
 The solver then attempts to find a value assignment to all those variables that
-satisfies all of the constraints -- the result is either ``satisfiable'' (i.e.
-there is such an assignment) or ``unsatisfiable'', meaning there isn't.
+satisfies all of the constraints -- the result is either "satisfiable" (i.e.
+there is such an assignment) or "unsatisfiable", meaning there isn't.
 The satisfying assignment comes in the form of the values taken by each
 variable.
 
