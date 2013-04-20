@@ -250,7 +250,7 @@ print_to_solver(void)
 
 	// Then the round arrays
 	for (i = 0; i < rounds; i++) {
-		for (j = 0; j < schedule_round_array_bump_count[i]; j++) {
+		for (j = 0; j <= schedule_round_array_bump_count[i]; j++) {
 			fprintf(outfile,
 				"(declare-fun round_%d_team_array_%d () "
 				"(Array Int Int))\n",
