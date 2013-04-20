@@ -358,7 +358,7 @@ display_solved_model(void)
 	close(fd);
 
 	// Pump the Z3 output through a useful awk script
-	sprintf(scratch_buffer, "./z3_parse.awk < %s > %s", input_file_name,
+	sprintf(scratch_buffer, "./smt_parse.awk < %s > %s", input_file_name,
 			formatted_output);
 	status = system(scratch_buffer);
 	if (status == -1) {
