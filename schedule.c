@@ -379,6 +379,7 @@ display_solved_model(void)
 		match_outcomes[round][match][slot] = team;
 	}
 	fclose(file);
+	unlink(formatted_output);
 
 	// Now print that data in some kind of order.
 	for (i = 0; i < rounds; i++) {
