@@ -219,6 +219,42 @@ create_constraints(void)
 void
 print_to_solver(void)
 {
+	char *templ = "/tmp/sr_schedule_XXXXXX";
+	int fd, i, j, k;
+	FILE *outfile;
+
+	// Spawn Z3; feed formula. Worry about using a properly open source
+	// solver in the future.
+
+	// Worry about streaming data into it later if we get onto incremental
+	// SMT.
+
+	fd = mkstemp(templ);
+	outfile = fdopen(fd, "w");
+	fprintf(outfile, "(set-info :status unknown)\n");
+	fprintf(outfile, "(set-logic QF_AUFLIRA)\n");
+
+	// Declare a bunch of symbols,
+
+	// The round variables
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				fprintf(outfile, "(declare-fun %s () Int)\n",
+					schedule_variable_names[i][j][k]);
+			}
+		}
+	}
+
+	// Then the round arrays
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < schedule_round_array_bump_count[i]; j++) {
+			fprintf(outfile,
+				"(declare-fun round_%d_team_array#%d () "
+				"(Array Int Int))\n",
+				i, j);
+		}
+	}
 
 	assert(0);
 }
