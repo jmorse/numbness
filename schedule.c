@@ -119,6 +119,13 @@ create_round_correct_constraints(void)
 		}
 	}
 
+	// Next up, ensuring we have each team once per round. We could assert
+	// they occur at least once with a huge 'or', and then count those
+	// occurences to ensure it's only as many as rounds there are, but
+	// that's unlikely to be an efficient structure. How about one array
+	// per round, fields nondeterministically updated, must all equal one?
+	// That probably works and scales.
+
 	assert(0);
 }
 
