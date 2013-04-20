@@ -39,6 +39,9 @@ LIST_HEAD(, constraint) list_of_constraints;
 // and third index -> the participants.
 char ****schedule_variable_names;
 
+// The actual schedule, once read from solver.
+int ***match_outcomes;
+
 void
 usage(const char *progname)
 {
@@ -274,7 +277,7 @@ display_solved_model(void)
 {
 	char formatted_output[] = "/tmp/sr_sched_reformatted_XXXXXX";
 	FILE *file;
-	int status, fd, round, match, slot, team;
+	int status, fd, round, match, slot, team, i, j;
 
 	// Rather than writing a proper parser and attempting to interpret
 	// all of these things, go for the half-arsed "work on the way Z3 prints
@@ -319,10 +322,24 @@ display_solved_model(void)
 		exit(EXIT_FAILURE);
 	}
 
+	// Grab some memory.
+	match_outcomes = malloc(sizeof(int *) * rounds);
+	for (i = 0; i < rounds; i++) {
+		match_outcomes[i] = malloc(sizeof(int *) * matches_per_round);
+		for (j = 0; j < matches_per_round; j++) {
+			match_outcomes[i][j] =
+				malloc(sizeof(int) * TEAMS_PER_MATCH);
+		}
+	}
+
 	while (fscanf(file, "round_%d_match_%d_slot_%d %d\n", &round, &match,
 				&slot, &team) == 4) {
-		// Do something with this data
-		printf("lololol %d %d %d %d\n", round, match, slot, team);
+		// Store for later printing
+		assert(round > 0 && round < rounds);
+		assert(match > 0 && match < matches_per_round);
+		assert(slot > 0 && slot < TEAMS_PER_MATCH);
+		assert(team > 0 && team < teams);
+		match_outcomes[round][match][slot] = team;
 	}
 	fclose(file);
 
