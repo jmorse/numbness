@@ -9,6 +9,7 @@
 
 #define TEAMS_PER_MATCH 4
 #define MATCH_SEPARATION 2
+#define MEET_SPREADING_RATE 0.5
 
 // SMT structure: only variables are the round variables, identifying what
 // teams are in what rounds.
@@ -240,6 +241,15 @@ create_goodness_constraints(void)
 	// After ensuring you've met everyone, another facet is ensuring you
 	// don't meet the same people repeatedly, which can be addressed later
 	// (and is likely to be much easier).
+	
+	// How to encode this? Can't think of a clever way, so go for the stupid
+	// way: one array per team, nondeterminsitically increment elements in
+	// each array every round, apply assertions at the end. Probably going
+	// to be horrible for performance; best we can hope for is that it
+	// reduces the state space to search.
+
+	// Calculate minimum number of people to meet, truncated
+	int min_people_met = teams * MEET_SPREADING_RATE;
 
 	return;
 }
