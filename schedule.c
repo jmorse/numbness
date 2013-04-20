@@ -198,7 +198,9 @@ create_goodness_constraints(void)
 	// Goodness: that teams have the same number of matches, that they have
 	// some good distance between matches, that they face a reasonable
 	// range of other teams.
-	assert(0);
+
+	// As of this moment, no goodness constraints. Just testing.
+	return;
 }
 
 void
