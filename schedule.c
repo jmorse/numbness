@@ -66,6 +66,22 @@ scratch_to_constraint(void)
 	return;
 }
 
+char *
+bump_round_array(int i)
+{
+	// Returns the name of the current round array variable; updates the
+	// one stored in the global table. One can then construct some syntax
+	// from the two and make an assertion.
+	// Caller must free the returned memory.
+
+	char *ret = strdup(schedule_round_array_names[i]);
+	free(schedule_round_array_names[i]);
+	sprintf(scratch_buffer, "round_%d_team_array#%d", i,
+			++schedule_round_array_bump_count[i]);
+	schedule_round_array_names[i] = strdup(scratch_buffer);
+	return ret;
+}
+
 void
 create_round_match_variables(void)
 {
