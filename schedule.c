@@ -161,7 +161,17 @@ create_round_correct_constraints(void)
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				// Do something
+				char *firstname = bump_round_array(i);
+				char *secondname =schedule_round_array_names[i];
+
+				// Encode the increment
+				sprintf(scratch_buffer,
+					"(assert (= %s (" // Assign to variable,
+					"+ (select %s %s) 1" // curval + 1
+					")))\n", // suffix
+					secondname, firstname,
+					schedule_variable_names[i][j][k]);
+				scratch_to_constraint();
 			}
 		}
 	}
