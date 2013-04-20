@@ -134,6 +134,10 @@ create_round_correct_constraints(void)
 				sprintf(scratch_buffer, "(assert (>= %s 0))\n",
 					schedule_variable_names[i][j][k]);
 				scratch_to_constraint();
+				sprintf(scratch_buffer, "(assert (< %s %d))\n",
+					schedule_variable_names[i][j][k],
+					teams);
+				scratch_to_constraint();
 			}
 		}
 	}
