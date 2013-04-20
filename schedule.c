@@ -51,6 +51,7 @@ int ***match_outcomes;
 // logic.
 const char zero_str[] = "0";
 const char int_sort[] = "Int";
+const char smt_logic[] = "QF_AUFLIRA";
 
 void
 usage(const char *progname)
@@ -337,7 +338,7 @@ print_to_solver(void)
 	outfile = fdopen(fd, "w");
 	fprintf(outfile, "(set-info :status unknown)\n");
 	fprintf(outfile, "(set-option :produce-models true)\n");
-	fprintf(outfile, "(set-logic QF_AUFLIRA)\n");
+	fprintf(outfile, "(set-logic %s)\n", smt_logic);
 
 	// Declare a bunch of symbols,
 
