@@ -280,6 +280,20 @@ create_goodness_constraints(void)
 		free(oldname);
 	}
 
+#if 0
+	// Now that we're zero inited, start putting some increments in there.
+	// Quite a number, unfortunately.
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				// For each /other/ team in the match, encode
+				// an addition.
+				int l;
+				for (l = 0; l < TEAMS_PER_MATCH; l++) {
+					if (l == k)
+						continue;
+#endif
+
 	return;
 }
 
