@@ -230,6 +230,12 @@ print_to_solver(void)
 		}
 	}
 
+	// Round match positions arrays.
+	for (i = 0; i < rounds; i++) {
+		fprintf(outfile, "(declare-fun %s () (Array Int Int))\n",
+				schedule_match_positions[i]);
+	}
+
 	// Now start pumping out constraints
 	LIST_FOREACH(ptr, &list_of_constraints, entry) {
 		fprintf(outfile, "%s", ptr->string);
