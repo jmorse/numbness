@@ -277,7 +277,7 @@ display_solved_model(void)
 {
 	char formatted_output[] = "/tmp/sr_sched_reformatted_XXXXXX";
 	FILE *file;
-	int status, fd, round, match, slot, team, i, j;
+	int status, fd, round, match, slot, team, i, j, k;
 
 	// Rather than writing a proper parser and attempting to interpret
 	// all of these things, go for the half-arsed "work on the way Z3 prints
@@ -343,6 +343,15 @@ display_solved_model(void)
 	}
 	fclose(file);
 
+	// Now print that data in some kind of order.
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			printf("%d", match_outcomes[i][j][0]);
+			for (k = 1; k < TEAMS_PER_MATCH; k++) {
+				printf("|%d", match_outcomes[i][j][k]);
+			}
+		}
+	}
 }
 
 int
