@@ -8,10 +8,10 @@
 #include <sys/queue.h>
 
 #define TEAMS_PER_MATCH 4
+#define MATCH_SEPARATION 2
 
 // SMT structure: only variables are the round variables, identifying what
-// teams are in what rounds. Also, an array per round indicating what match
-// number each team ran in, that we later use for goodness.
+// teams are in what rounds.
 //
 // Tried to define some structures that munged these things, but it's pointless
 // to ensure such rigidity without a proper API: instead, lets just print text
@@ -39,10 +39,6 @@ LIST_HEAD(, constraint) list_of_constraints;
 // who is in what match. First index -> the round, second index -> the match,
 // and third index -> the participants.
 char ****schedule_variable_names;
-
-// Array names: one per match, domain is the team number, range is the (global)
-// match number that this team participated in.
-char **schedule_match_positions;
 
 // The actual schedule, once read from solver.
 int ***match_outcomes;
@@ -108,13 +104,6 @@ create_round_match_variables(void)
 		}
 	}
 
-	// Create array variables for the match positions arrays.
-	schedule_match_positions = malloc(sizeof(char *) * rounds);
-	for (i = 0; i < rounds; i++) {
-		sprintf(scratch_buffer, "round_%d_match_positions", i);
-		schedule_match_positions[i] = strdup(scratch_buffer);
-	}
-
 	return;
 }
 
@@ -175,46 +164,67 @@ create_round_correct_constraints(void)
 void
 create_goodness_constraints(void)
 {
-	int global_match_number = 0, i, j, k;
+	int i, j, k;
 
 	// Goodness: that teams have the same number of matches, that they have
 	// some good distance between matches, that they face a reasonable
 	// range of other teams.
 
-	// Collect the match positions of each team into an array. For each
-	// round, store an element into the array with the team number as the
-	// index, the value of the (global) match number.
+	// Rather than trying to calculate numbers of matches using integer
+	// addition, which is relatively expensive, we can in fact just use
+	// distinct again: ensure that, across the edges of rounds, all the
+	// teams playing are distinct. This preserves the condition that matches
+	// are sufficiently seperate over that period, without resorting to
+	// any additional logic.
 
-	for (i = 0; i < rounds; i++) {
-		for (j = 0; j < matches_per_round; j++) {
-			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				sprintf(scratch_buffer,
-					"(assert (= %d (select %s %s)))\n",
-					global_match_number,
-					schedule_match_positions[i],
+	// So: for each N-match period that covers the boundry of a round,
+	// apply a distinct to all the slots in it.
+
+	assert(MATCH_SEPARATION < matches_per_round && "Match seperation "
+		       "requirement prohibits all schedules");
+
+	for (i = 0; i < rounds - 1; i++) { // For each boundry...
+		// early_match_pos is the match to start this period at in the
+		// earlier match; later_match_pos is the position in the later
+		// match at which to stop this period.
+		int early_match_pos, later_match_pos;
+
+		// Start with the period we cover overlapping mostly the earlier
+		// round and only covering one match in the later round; then
+		// move across the boundry match by match.
+		for (early_match_pos = matches_per_round - MATCH_SEPARATION,
+				later_match_pos = 1;
+				early_match_pos < matches_per_round;
+				early_match_pos++, later_match_pos++) {
+
+			// Over this range, cover MATCH_SEPARATION + 1 matches,
+			// to ensure that after having one match we don't have
+			// a match in the subsequent MATCH_SEPARATION matches.
+			sprintf(scratch_buffer,  "(assert (distinct ");
+
+			// Early portion
+			for (j = early_match_pos; j < matches_per_round; j++) {
+				for (k = 0; k < TEAMS_PER_MATCH; k++) {
+					strcat(scratch_buffer,
 					schedule_variable_names[i][j][k]);
-				scratch_to_constraint();
+					strcat(scratch_buffer, " ");
+				}
 			}
 
-			global_match_number++;
-		}
-	}
+			// Later portion
+			for (j = 0; j < later_match_pos; j++) {
+				for (k = 0; k < TEAMS_PER_MATCH; k++) {
+					strcat(scratch_buffer,
+					schedule_variable_names[i+1][j][k]);
+					strcat(scratch_buffer, " ");
+				}
+			}
 
-	// Actual constraints: state that the global match number distance
-	// between which match a team takes in a round must increment by some
-	// minimum amount (should probably get configured on the command line).
-	for (i = 0; i < teams; i++) {
-		for (j = 0; j < rounds - 1; j++) {
-			// We know for a fact that the round number will have
-			// increased. Assert that newmatch >= oldmatch + 2
-			sprintf(scratch_buffer, "(assert (>= "
-					"(select %s %d) "
-					"(+ (select %s %d) 2)))\n",
-					schedule_match_positions[j + 1], i,
-					schedule_match_positions[j], i);
+			strcat(scratch_buffer, "))\n");
+
 			scratch_to_constraint();
-		}
-	}
+		} // End of one period
+	} // End of one round boundry
 
 	return;
 }
@@ -263,12 +273,6 @@ print_to_solver(void)
 					schedule_variable_names[i][j][k]);
 			}
 		}
-	}
-
-	// Round match positions arrays.
-	for (i = 0; i < rounds; i++) {
-		fprintf(outfile, "(declare-fun %s () (Array Int Int))\n",
-				schedule_match_positions[i]);
 	}
 
 	// Now start pumping out constraints
