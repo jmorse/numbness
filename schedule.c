@@ -10,7 +10,8 @@
 #define TEAMS_PER_MATCH 4
 
 // SMT structure: only variables are the round variables, identifying what
-// teams are in what rounds.
+// teams are in what rounds. Also, an array per round indicating what match
+// number each team ran in, that we later use for goodness.
 //
 // Tried to define some structures that munged these things, but it's pointless
 // to ensure such rigidity without a proper API: instead, lets just print text
@@ -38,6 +39,10 @@ LIST_HEAD(, constraint) list_of_constraints;
 // who is in what match. First index -> the round, second index -> the match,
 // and third index -> the participants.
 char ****schedule_variable_names;
+
+// Array names: one per match, domain is the team number, range is the (global)
+// match number that this team participated in.
+char **schedule_match_positions;
 
 // The actual schedule, once read from solver.
 int ***match_outcomes;
@@ -101,6 +106,13 @@ create_round_match_variables(void)
 						i, j, k);
 			}
 		}
+	}
+
+	// Create array variables for the match positions arrays.
+	schedule_match_positions = malloc(sizeof(char *) * rounds);
+	for (i = 0; i < rounds; i++) {
+		sprintf(scratch_buffer, "round_%d_match_positions", i);
+		schedule_match_positions[i] = strdup(scratch_buffer);
 	}
 
 	return;
