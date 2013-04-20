@@ -227,7 +227,7 @@ print_to_solver(void)
 	fprintf(outfile, "(get-model)\n");
 
 	fclose(outfile);
-	printf("Done generating benchmark, at %s\n", output_file_name);
+	fprintf(stderr, "Done generating benchmark, at %s\n", output_file_name);
 }
 
 void
