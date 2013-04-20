@@ -266,6 +266,8 @@ print_to_solver(void)
 		fprintf(outfile, "%s", ptr->string);
 	}
 
+	fprintf(outfile, "(check-sat)\n");
+
 	fclose(outfile);
 	printf("Done generating benchmark, at %s\n", templ);
 }
