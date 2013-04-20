@@ -140,6 +140,17 @@ create_round_correct_constraints(void)
 		}
 	}
 
+	// Now for each team in each match, increment the corresponding element
+	// by one.
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				// Do something
+			}
+		}
+	}
+
+
 	assert(0);
 }
 
