@@ -189,7 +189,7 @@ create_goodness_constraints(void)
 		for (j = 0; j < matches_per_round; j++) {
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
 				sprintf(scratch_buffer,
-					"(assert (= %d (select %s %s)))",
+					"(assert (= %d (select %s %s)))\n",
 					global_match_number,
 					schedule_match_positions[i],
 					schedule_variable_names[i][j][k]);
