@@ -222,6 +222,7 @@ print_to_solver(void)
 	char *templ = "/tmp/sr_schedule_XXXXXX";
 	int fd, i, j, k;
 	FILE *outfile;
+	struct constraint *ptr;
 
 	// Spawn Z3; feed formula. Worry about using a properly open source
 	// solver in the future.
@@ -254,6 +255,11 @@ print_to_solver(void)
 				"(Array Int Int))\n",
 				i, j);
 		}
+	}
+
+	// Now start pumping out constraints
+	LIST_FOREACH(ptr, &list_of_constraints, entry) {
+		fprintf(outfile, "%s", ptr->string);
 	}
 
 	assert(0);
