@@ -223,7 +223,7 @@ create_constraints(void)
 void
 print_to_solver(void)
 {
-	char templ[] = "/tmp/sr_schedule_XXXXXX";
+	char templ[] = "sr_schedule_XXXXXX";
 	int fd, i, j, k;
 	FILE *outfile;
 	struct constraint *ptr;
