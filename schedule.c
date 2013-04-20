@@ -210,8 +210,8 @@ create_goodness_constraints(void)
 			sprintf(scratch_buffer, "(assert (>= "
 					"(select %s %d) "
 					"(+ (select %s %d) 2)))\n",
-					schedule_match_positions[j], i,
-					schedule_match_positions[j + 1], i);
+					schedule_match_positions[j + 1], i,
+					schedule_match_positions[j], i);
 			scratch_to_constraint();
 		}
 	}
