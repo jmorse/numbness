@@ -335,10 +335,10 @@ display_solved_model(void)
 	while (fscanf(file, "round_%d_match_%d_slot_%d %d\n", &round, &match,
 				&slot, &team) == 4) {
 		// Store for later printing
-		assert(round > 0 && round < rounds);
-		assert(match > 0 && match < matches_per_round);
-		assert(slot > 0 && slot < TEAMS_PER_MATCH);
-		assert(team > 0 && team < teams);
+		assert(round >= 0 && round < rounds);
+		assert(match >= 0 && match < matches_per_round);
+		assert(slot >= 0 && slot < TEAMS_PER_MATCH);
+		assert(team >= 0 && team < teams);
 		match_outcomes[round][match][slot] = team;
 	}
 	fclose(file);
