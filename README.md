@@ -34,8 +34,8 @@ The current list of constraints placed on the schedule:
  * Number of rounds
  * Number of teams (if not a multiple of 4, will probably break excitingly)
  * Teams per match, as a preprocessor define (currently 4)
+ * Match seperation distance, preprocessor define (currently 2)
 
 Some goodness criteria that will be added to see if the solver can generate a
 formula that satisfies them are:
- * Match seperation distance
  * Distribution of opponents
