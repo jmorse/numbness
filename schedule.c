@@ -214,8 +214,42 @@ print_to_solver(void)
 void
 solve_with_solver(void)
 {
+	int fd, result;
 
-	assert(0);
+	// Rather than attempting to stream gunge into the solver and
+	// dynamically ask it questions about what it solved, for the moment
+	// just feed it the output file it wrote, then parse the get-model
+	// output. Assume, for now, Z3.
+
+	fd = mkstemp(input_file_name);
+	if (fd < 0) {
+		perror("Couldn't create solver-output-file");
+		exit(EXIT_FAILURE);
+	}
+	close(fd);
+
+	sprintf(scratch_buffer, "z3 -smt2 %s > %s", output_file_name,
+			input_file_name);
+	result = system(scratch_buffer);
+	if (result == -1) {
+		perror("Couldn't fork to run solver");
+		exit(1);
+	}
+
+	if (!WIFEXITED(result)) {
+		fprintf(stderr, "Solver exited abnormally, you broke it\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (WEXITSTATUS(result) != 0) {
+		fprintf(stderr, "Solver exited with status %d, SMT syntax "
+				"probably broken, please inspect\n",
+				WEXITSTATUS(result));
+		exit(EXIT_FAILURE);
+	}
+
+	// Past here, solver returned successfully.
+	return;
 }
 
 void
