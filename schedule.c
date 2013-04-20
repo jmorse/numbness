@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -10,49 +11,23 @@
 
 // SMT structure: only variables are the round variables, identifying what
 // teams are in what rounds.
-// Formulas are all of integer or bool types; operations are only the normal
-// integer relations and equality. Operands are only ever one of the round
-// variables or a integer constant.
+// Tried to define some structures that munged these things, but it's pointless
+// to ensure such rigidity without a proper API: instead, lets just print text
+// and store constraints as text.
 
-enum operations {
-	op_equality = 0,
-	op_notequal,
-	op_lessthan,
-	op_lessthanequal,
-	op_greaterthan,
-	op_greaterthanequal,
-};
-
-union operand {
-	char *variable_name;
-	unsigned int constant_num;
-};
-
-struct constraint;
-struct constraint {
-	enum operations op;
-	union operand operand1;
-	union operand operand2;
-	bool op1_is_variable, op2_is_variable;
-	LIST_ENTRY(constraint) entry;
-};
-
-struct logic_constraint;
-struct logic_constraint {
-	enum operations op;
-	LIST_HEAD(,constraint) operands; // All of which evaluate to bool
-	LIST_ENTRY(constraint) entry;
-};
+char scratch_buffer[0x100000]; // 1Mb of text buffer should be enough for anyone
 
 int teams, rounds;
 int matches_per_round;
 
+struct constraint;
+struct constraint {
+	char *string;
+	LIST_ENTRY(constraint) entry;
+};
+
 // List of contraints we've calculated
 LIST_HEAD(, constraint) list_of_constraints;
-
-// List of additional logic contraints -- things with huge lists of operands,
-// that only have boolean values and only result in boolean values.
-LIST_HEAD(, constraint) list_of_logic_constraints;
 
 // Three level array of match schedule variable names; the variables that define
 // who is in what match. First index -> the round, second index -> the match,
@@ -65,6 +40,22 @@ usage(const char *progname)
 
 	fprintf(stderr, "Usage: %s num_teams num_rounds\n", progname);
 	exit(EXIT_FAILURE);
+}
+
+void
+scratch_to_constraint(void)
+{
+	struct constraint *c;
+
+	c = malloc(sizeof(*c));
+	if (c == NULL) {
+		fprintf(stderr, "OOM\n");
+		abort();
+	}
+
+	c->string = strdup(scratch_buffer);
+	LIST_INSERT_HEAD(&list_of_constraints, c, entry);
+	return;
 }
 
 void
@@ -107,14 +98,9 @@ create_round_correct_constraints(void)
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				struct constraint *c = malloc(sizeof(*c));
-				c->op = op_greaterthanequal;
-				c->operand1.variable_name =
-					schedule_variable_names[i][j][k];
-				c->operand2.constant_num = 0;
-				c->op1_is_variable = true;
-				c->op2_is_variable = false;
-				LIST_INSERT_HEAD(&list_of_constraints, c,entry);
+				sprintf(scratch_buffer, "(assert (>= %s 0))\n",
+					schedule_variable_names[i][j][k]);
+				scratch_to_constraint();
 			}
 		}
 	}
