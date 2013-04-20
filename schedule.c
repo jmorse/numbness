@@ -200,6 +200,22 @@ create_goodness_constraints(void)
 		}
 	}
 
+	// Actual constraints: state that the global match number distance
+	// between which match a team takes in a round must increment by some
+	// minimum amount (should probably get configured on the command line).
+	for (i = 0; i < teams; i++) {
+		for (j = 0; j < rounds - 1; j++) {
+			// We know for a fact that the round number will have
+			// increased. Assert that newmatch >= oldmatch + 2
+			sprintf(scratch_buffer, "(assert (>= "
+					"(select %s %d) "
+					"(+ (select %s %d) 2)))\n",
+					schedule_match_positions[j], i,
+					schedule_match_positions[j + 1], i);
+			scratch_to_constraint();
+		}
+	}
+
 	return;
 }
 
