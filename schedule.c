@@ -8,6 +8,7 @@
 #include <sys/queue.h>
 
 #define TEAMS_PER_MATCH 4
+#define MATCH_SEPARATION 2
 
 // SMT structure: only variables are the round variables, identifying what
 // teams are in what rounds.
@@ -163,6 +164,7 @@ create_round_correct_constraints(void)
 void
 create_goodness_constraints(void)
 {
+	int i, j, k;
 
 	// Goodness: that teams have the same number of matches, that they have
 	// some good distance between matches, that they face a reasonable
@@ -177,6 +179,52 @@ create_goodness_constraints(void)
 
 	// So: for each N-match period that covers the boundry of a round,
 	// apply a distinct to all the slots in it.
+
+	assert(MATCH_SEPARATION < matches_per_round && "Match seperation "
+		       "requirement prohibits all schedules");
+
+	for (i = 0; i < rounds - 1; i++) { // For each boundry...
+		// early_match_pos is the match to start this period at in the
+		// earlier match; later_match_pos is the position in the later
+		// match at which to stop this period.
+		int early_match_pos, later_match_pos;
+
+		// Start with the period we cover overlapping mostly the earlier
+		// round and only covering one match in the later round; then
+		// move across the boundry match by match.
+		for (early_match_pos = matches_per_round - MATCH_SEPARATION,
+				later_match_pos = 1;
+				early_match_pos < matches_per_round;
+				early_match_pos++, later_match_pos++) {
+
+			// Over this range, cover MATCH_SEPARATION + 1 matches,
+			// to ensure that after having one match we don't have
+			// a match in the subsequent MATCH_SEPARATION matches.
+			sprintf(scratch_buffer,  "(assert (distinct ");
+
+			// Early portion
+			for (j = early_match_pos; j < matches_per_round; j++) {
+				for (k = 0; k < TEAMS_PER_MATCH; k++) {
+					strcat(scratch_buffer,
+					schedule_variable_names[i][j][k]);
+					strcat(scratch_buffer, " ");
+				}
+			}
+
+			// Later portion
+			for (j = 0; j < later_match_pos; j++) {
+				for (k = 0; k < TEAMS_PER_MATCH; k++) {
+					strcat(scratch_buffer,
+					schedule_variable_names[i+1][j][k]);
+					strcat(scratch_buffer, " ");
+				}
+			}
+
+			strcat(scratch_buffer, "))\n");
+
+			scratch_to_constraint();
+		} // End of one period
+	} // End of one round boundry
 
 	return;
 }
