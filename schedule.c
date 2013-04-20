@@ -76,7 +76,7 @@ bump_round_array(int i)
 
 	char *ret = strdup(schedule_round_array_names[i]);
 	free(schedule_round_array_names[i]);
-	sprintf(scratch_buffer, "round_%d_team_array#%d", i,
+	sprintf(scratch_buffer, "round_%d_team_array_%d", i,
 			++schedule_round_array_bump_count[i]);
 	schedule_round_array_names[i] = strdup(scratch_buffer);
 	return ret;
@@ -109,7 +109,7 @@ create_round_match_variables(void)
 	schedule_round_array_bump_count = malloc(sizeof(int) * rounds);
 	schedule_round_array_names = malloc(sizeof(char *) * rounds);
 	for (i = 0; i < rounds; i++) {
-		sprintf(scratch_buffer, "round_%d_team_array#0", i);
+		sprintf(scratch_buffer, "round_%d_team_array_0", i);
 		schedule_round_array_names[i] = strdup(scratch_buffer);
 		schedule_round_array_bump_count[i] = 0;
 	}
@@ -252,7 +252,7 @@ print_to_solver(void)
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < schedule_round_array_bump_count[i]; j++) {
 			fprintf(outfile,
-				"(declare-fun round_%d_team_array#%d () "
+				"(declare-fun round_%d_team_array_%d () "
 				"(Array Int Int))\n",
 				i, j);
 		}
