@@ -272,8 +272,45 @@ solve_with_solver(void)
 void
 display_solved_model(void)
 {
+	char formatted_output[] = "/tmp/sr_sched_reformatted_XXXXXX";
+	int status, fd;
 
-	assert(0);
+	// Rather than writing a proper parser and attempting to interpret
+	// all of these things, go for the half-arsed "work on the way Z3 prints
+	// it" approach. Which is fine for now.
+
+	fd = mkstemp(formatted_output);
+	if (fd < 0) {
+		perror("Couldn't open formatted output file");
+		exit(EXIT_FAILURE);
+	}
+	close(fd);
+
+	// Pump the Z3 output through a useful awk script
+	sprintf(scratch_buffer, "./z3_parse.awk < %s > %s", input_file_name,
+			formatted_output);
+	status = system(scratch_buffer);
+	if (status == -1) {
+		perror("Couldn't fork to parse output");
+		unlink(formatted_output);
+		exit(EXIT_FAILURE);
+	}
+
+	if (!WIFEXITED(status)) {
+		fprintf(stderr, "Awk exited abnormally\n");
+		unlink(formatted_output);
+		exit(EXIT_FAILURE);
+	}
+
+	if (WEXITSTATUS(status) != 0) {
+		fprintf(stderr, "Awk exited with status %d\n",
+				WEXITSTATUS(status));
+		unlink(formatted_output);
+		exit(EXIT_FAILURE);
+	}
+
+	// Success.
+
 }
 
 int
