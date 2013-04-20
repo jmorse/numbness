@@ -172,9 +172,12 @@ create_round_correct_constraints(void)
 				// Encode the increment
 				sprintf(scratch_buffer,
 					"(assert (= %s (" // Assign to variable,
+					"store %s %s (" // Array w/ updated elem
 					"+ (select %s %s) 1" // curval + 1
-					")))\n", // suffix
+					"))))\n", // suffix
 					secondname, firstname,
+					schedule_variable_names[i][j][k],
+					firstname,
 					schedule_variable_names[i][j][k]);
 				scratch_to_constraint();
 			}
