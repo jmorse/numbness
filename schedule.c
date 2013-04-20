@@ -250,7 +250,7 @@ solve_with_solver(void)
 	result = system(scratch_buffer);
 	if (result == -1) {
 		perror("Couldn't fork to run solver");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	if (!WIFEXITED(result)) {
