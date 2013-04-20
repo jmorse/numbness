@@ -254,6 +254,7 @@ create_goodness_constraints(void)
 	// Calculate minimum number of people to meet, truncated
 	//int min_people_met = teams * MEET_SPREADING_RATE;
 
+#if 0
 	// Create some tracking arrays, zero initialize them.
 	for (i = 0; i < teams; i++) {
 		int elemcount = 0;
@@ -279,6 +280,7 @@ create_goodness_constraints(void)
 
 		free(oldname);
 	}
+#endif
 
 #if 0
 	// Now that we're zero inited, start putting some increments in there.
