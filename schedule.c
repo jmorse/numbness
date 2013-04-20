@@ -175,12 +175,31 @@ create_round_correct_constraints(void)
 void
 create_goodness_constraints(void)
 {
+	int global_match_number = 0, i, j, k;
 
 	// Goodness: that teams have the same number of matches, that they have
 	// some good distance between matches, that they face a reasonable
 	// range of other teams.
 
-	// As of this moment, no goodness constraints. Just testing.
+	// Collect the match positions of each team into an array. For each
+	// round, store an element into the array with the team number as the
+	// index, the value of the (global) match number.
+
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				sprintf(scratch_buffer,
+					"(assert (= %d (select %s %s)))",
+					global_match_number,
+					schedule_match_positions[i],
+					schedule_variable_names[i][j][k]);
+				scratch_to_constraint();
+			}
+
+			global_match_number++;
+		}
+	}
+
 	return;
 }
 
