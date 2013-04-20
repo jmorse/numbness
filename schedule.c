@@ -44,6 +44,9 @@ char ****schedule_variable_names;
 // The actual schedule, once read from solver.
 int ***match_outcomes;
 
+// Not storing met-team variable names globally because they're likely to be
+// fairly transient.
+
 void
 usage(const char *progname)
 {
@@ -249,7 +252,33 @@ create_goodness_constraints(void)
 	// reduces the state space to search.
 
 	// Calculate minimum number of people to meet, truncated
-	int min_people_met = teams * MEET_SPREADING_RATE;
+	//int min_people_met = teams * MEET_SPREADING_RATE;
+
+	// Create some tracking arrays, zero initialize them.
+	for (i = 0; i < teams; i++) {
+		int elemcount = 0;
+		sprintf(scratch_buffer, "met_teams_array_round_Z_slot_Z");
+		char *oldname = strdup(scratch_buffer);
+		char *newname = NULL;
+
+		for (elemcount = 0; elemcount < teams; elemcount++) {
+			sprintf(scratch_buffer,
+					"met_teams_array_round_Z_slot_%d",
+					elemcount);
+			newname = strdup(scratch_buffer);
+
+			// Store into the old buffer, at element elemcount,
+			// the value zero.
+			sprintf(scratch_buffer,
+					"(assert (= %s (store %s %d 0)))",
+					oldname, newname, elemcount);
+			scratch_to_constraint();
+			free(oldname);
+			oldname = newname;
+		}
+
+		free(oldname);
+	}
 
 	return;
 }
