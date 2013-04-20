@@ -98,7 +98,7 @@ create_round_match_variables(void)
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
 				schedule_variable_names[i][j][k] = malloc(128);
 				snprintf(schedule_variable_names[i][j][k], 127,
-						"round_%d::match_%d::slot_%d",
+						"round_%d_match_%d_slot_%d",
 						i, j, k);
 			}
 		}
