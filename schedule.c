@@ -129,6 +129,17 @@ create_round_correct_constraints(void)
 	// per round, fields nondeterministically updated, must all equal one?
 	// That probably works and scales.
 
+	// For each round, store zeros in each element per team, by assertion.
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < teams; j++) {
+			char *name = schedule_round_array_names[i];
+			sprintf(scratch_buffer,
+					"(assert (= 0 (select %s %d)))\n",
+					name, j);
+			scratch_to_constraint();
+		}
+	}
+
 	assert(0);
 }
 
