@@ -177,6 +177,11 @@ print_to_solver(void)
 	// SMT.
 
 	fd = mkstemp(output_file_name);
+	if (fd < 0) {
+		perror("Couldn't open formula output file");
+		exit(EXIT_FAILURE);
+	}
+
 	outfile = fdopen(fd, "w");
 	fprintf(outfile, "(set-info :status unknown)\n");
 	fprintf(outfile, "(set-option :produce-models true)\n");
