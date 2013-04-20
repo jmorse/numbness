@@ -273,7 +273,8 @@ void
 display_solved_model(void)
 {
 	char formatted_output[] = "/tmp/sr_sched_reformatted_XXXXXX";
-	int status, fd;
+	FILE *file;
+	int status, fd, round, match, slot, team;
 
 	// Rather than writing a proper parser and attempting to interpret
 	// all of these things, go for the half-arsed "work on the way Z3 prints
@@ -310,6 +311,20 @@ display_solved_model(void)
 	}
 
 	// Success.
+
+	file = fopen(formatted_output, "r");
+	if (file == NULL) {
+		perror("Couldn't open formatted output");
+		unlink(formatted_output);
+		exit(EXIT_FAILURE);
+	}
+
+	while (fscanf(file, "round_%d_match_%d_slot_%d %d\n", &round, &match,
+				&slot, &team) == 4) {
+		// Do something with this data
+		printf("lololol %d %d %d %d\n", round, match, slot, team);
+	}
+	fclose(file);
 
 }
 
