@@ -262,7 +262,8 @@ print_to_solver(void)
 		fprintf(outfile, "%s", ptr->string);
 	}
 
-	assert(0);
+	fclose(outfile);
+	printf("Done generating benchmark, at %s\n", templ);
 }
 
 void
