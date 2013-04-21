@@ -376,7 +376,7 @@ create_goodness_constraints(void)
 			sprintf(scratch_buffer,
 				"(bvadd %s "
 				"(concat zeroprefix ((_ extract %d %d) %s)))",
-				accuml_additions, j + 1, j, bitvector);
+				accuml_additions, j, j, bitvector);
 			free(accuml_additions);
 			accuml_additions = strdup(scratch_buffer);
 		}
