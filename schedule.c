@@ -270,50 +270,18 @@ create_goodness_constraints(void)
 	// Calculate minimum number of people to meet, truncated
 	//int min_people_met = teams * MEET_SPREADING_RATE;
 
-	// Create some tracking arrays, zero initialize them. Sort: domain is
-	// team ID, range is 2^teamcount bv.
-	sprintf(scratch_buffer, "(_ bv0 %d)", teams);
-	char *team_bv_zero_str = strdup(scratch_buffer);
-	sprintf(scratch_buffer, "met_teams_array_round_Z_match_Z");
-	char *oldname = strdup(scratch_buffer);
-	char *newname = NULL;
-	for (i = 0; i < teams; i++) {
-		char anotherbuffer[64];
-
-		sprintf(scratch_buffer, "met_teams_array_round_Z_match_%d", i);
-		newname = strdup(scratch_buffer);
-
-		// Store into the old buffer, at element elemcount,
-		// the value zero.
-		snprintf(anotherbuffer, 63, "(_ bv%d %d)", i, teams);
-		sprintf(scratch_buffer,
-				"(assert (= %s (store %s %s %s)))\n",
-				newname, oldname, anotherbuffer,
-				team_bv_zero_str);
-		scratch_to_constraint();
-		free(oldname);
-		oldname = newname;
-	}
-	free(team_bv_zero_str);
-
-	// Oldname string retained across this part.
-
-	// Now that we're zero inited, start putting some increments in there.
-	// Quite a number, unfortunately.
+	// Bees.
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
-			// For every match, calculate the bitmask of who meets
-			// in it. As a string. Bah, this can be a variable as
-			// well then.
-			sprintf(scratch_buffer, "met_bv_round_%d_match_%d",
-					i, j);
-			char *varname = strdup(scratch_buffer);
-			sprintf(scratch_buffer, "(assert (= %s (bvor "
-					"(bvor (bvshl (_ bv1 %d) %s) "
+			// Calculate the bitmask of all the meeting teams here.
+
+			sprintf(scratch_buffer,
+					"(assert (= met_team_bv_r_%d_m_%d "
+					"((bvor (bvshl (_ bv1 %d) %s) "
 					      "(bvshl (_ bv1 %d) %s))"
 					"(bvor (bvshl (_ bv1 %d) %s) "
 					      "(bvshl (_ bv1 %d) %s)))))\n",
-					      varname, teams,
+					      i, j, teams,
 					      schedule_variable_names[i][j][0],
 					      teams,
 					      schedule_variable_names[i][j][1],
@@ -326,44 +294,18 @@ create_goodness_constraints(void)
 			// Now, or that bv into the corresponding portions of
 			// the tracking array.
 
-			sprintf(scratch_buffer,
-					"met_teams_array_round_%d_match_%d",
-					i, j);
-			newname = strdup(scratch_buffer);
+			for (k = 0; k < TEAMS_PER_MATCH; k++) {
+				sprintf(scratch_buffer, "(assert (bvand "
+					"met_team_bv_r_%d_m_%d "
+					"(select met_team_array %s)))\n",
+					i, j, schedule_variable_names[i][j][k]);
 
-			// Create 4 stores, seeing how we bvor this into each
-			// slot for each match.
-			sprintf(scratch_buffer, "(assert (= %s ("
-					"store (store (store (store %s "
-					"%s (bvor (select %s %s) %s))"
-					"%s (bvor (select %s %s) %s))"
-					"%s (bvor (select %s %s) %s))"
-					"%s (bvor (select %s %s) %s))))",
-					newname, oldname,
-					schedule_variable_names[i][j][0],
-					oldname,
-					schedule_variable_names[i][j][0],
-					varname,
-					schedule_variable_names[i][j][1],
-					oldname,
-					schedule_variable_names[i][j][1],
-					varname,
-					schedule_variable_names[i][j][2],
-					oldname,
-					schedule_variable_names[i][j][2],
-					varname,
-					schedule_variable_names[i][j][3],
-					oldname,
-					schedule_variable_names[i][j][3],
-					varname);
-			scratch_to_constraint();
-
-			free(oldname);
-			free(varname);
-			oldname = newname;
+				scratch_to_constraint();
+			}
 		}
 	}
 
+#if 0
 	// And after all that, actually calcumalate who met how many people.
 	// Zero-extend each bit and add them up, then assert that it's the
 	// minimum.
@@ -394,6 +336,7 @@ create_goodness_constraints(void)
 	sprintf(scratch_buffer, "(assert (= zeroprefix (_ bv0 %d)))\n",
 			teams - 1);
 	scratch_to_constraint();
+#endif
 
 	return;
 }
