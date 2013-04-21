@@ -12,6 +12,7 @@
 (define-fun round_limit () (_ BitVec 6) (_ bv13 6))
 (define-fun match_limit () (_ BitVec 6) (_ bv8 6))
 (define-fun teams_per_round () (_ BitVec 6) (_ bv4 6))
+(define-fun match_separation () (_ BitVec 6) (_ bv2 6))
 
 ; Assert that for all slots, the outcome is in range.
 (assert (forall ((round (_ BitVec 6)) (match (_ BitVec 6)) (slot (_ BitVec 6)))
@@ -29,6 +30,9 @@
   ; Ensure they're distinct otherwise
   (distinct (sparticus round matcha slota) (sparticus round matchb slotb)
 )))))))))
+
+; Assert that for all pairs of slots across the round boundry, there's at
+; least N matches of separation.
 
 (check-sat)
 ;(get-model)
