@@ -6,6 +6,8 @@
 #include <unistd.h>
 
 #include <sys/queue.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define TEAMS_PER_MATCH 4
 #define MATCH_SEPARATION 2
