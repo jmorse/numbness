@@ -291,8 +291,9 @@ create_goodness_constraints(void)
 		free(oldname);
 		oldname = newname;
 	}
-	free(oldname);
 	free(team_bv_zero_str);
+
+	// Oldname string retained across this part.
 
 	// Now that we're zero inited, start putting some increments in there.
 	// Quite a number, unfortunately.
@@ -322,7 +323,37 @@ create_goodness_constraints(void)
 			// Now, or that bv into the corresponding portions of
 			// the tracking array.
 
-			// later
+			sprintf(scratch_buffer,
+					"met_teams_array_round_%d_match_%d",
+					i, j);
+			newname = strdup(scratch_buffer);
+
+			// Create 4 stores, seeing how we bvor this into each
+			// slot for each match.
+			sprintf(scratch_buffer, "(assert (= %s ("
+					"store (store (store (store %s "
+					"%s (bvor (select %s %s) %s))"
+					"%s (bvor (select %s %s) %s))"
+					"%s (bvor (select %s %s) %s))"
+					"%s (bvor (select %s %s) %s))))",
+					newname, oldname,
+					schedule_variable_names[i][j][0],
+					oldname,
+					schedule_variable_names[i][j][0],
+					varname,
+					schedule_variable_names[i][j][1],
+					oldname,
+					schedule_variable_names[i][j][1],
+					varname,
+					schedule_variable_names[i][j][2],
+					oldname,
+					schedule_variable_names[i][j][2],
+					varname,
+					schedule_variable_names[i][j][3],
+					oldname,
+					schedule_variable_names[i][j][3],
+					varname);
+			scratch_to_constraint();
 		}
 	}
 
