@@ -387,6 +387,11 @@ create_goodness_constraints(void)
 		scratch_to_constraint();
 	}
 
+	// Also define zeroprefix
+	sprintf(scratch_buffer, "(assert (= zeroprefix (_ bv0 %d)))\n",
+			teams - 1);
+	scratch_to_constraint();
+
 	return;
 }
 
@@ -443,8 +448,6 @@ print_to_solver(void)
 		fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
 				scratch_buffer, int_sort, int_sort);
 	}
-	fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
-			"met_teams_array_round_Z_match_Z", int_sort, int_sort);
 
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
@@ -453,6 +456,12 @@ print_to_solver(void)
 			"() (Array %s %s))\n", i, j, int_sort, int_sort);
 		}
 	}
+
+	// One-offs
+	fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
+			"met_teams_array_round_Z_match_Z", int_sort, int_sort);
+	fprintf(outfile, "(declare-fun zeroprefix () (_ BitVec %d))\n",
+			teams - 1);
 
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
