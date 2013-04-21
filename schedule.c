@@ -298,7 +298,7 @@ create_goodness_constraints(void)
 				sprintf(scratch_buffer, "(assert (= "
 					"met_team_bv_r_%d_m_%d (bvand "
 					"met_team_bv_r_%d_m_%d "
-					"(select met_team_array %s))))\n",
+					"(select met_teams_array %s))))\n",
 					i, j, i, j,
 					schedule_variable_names[i][j][k]);
 
@@ -392,24 +392,16 @@ print_to_solver(void)
 
 	// Met-goodness tracking variables.
 	for (i = 0; i < teams; i++) {
-		sprintf(scratch_buffer, "met_teams_array_round_Z_match_%d", i);
-		fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
-				scratch_buffer, int_sort, int_sort);
-	}
-
-	for (i = 0; i < rounds; i++) {
-		for (j = 0; j < matches_per_round; j++) {
-			fprintf(outfile,
-			"(declare-fun met_teams_array_round_%d_match_%d "
-			"() (Array %s %s))\n", i, j, int_sort, int_sort);
+		for (j = 0 ;j < matches_per_round; j++) {
+			sprintf(scratch_buffer, "met_team_bv_r_%d_m_%d", i, j);
+			fprintf(outfile, "(declare-fun %s () (_ BitVec %d))\n",
+					scratch_buffer, teams);
 		}
 	}
 
 	// One-offs
 	fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
-			"met_teams_array_round_Z_match_Z", int_sort, int_sort);
-	fprintf(outfile, "(declare-fun zeroprefix () (_ BitVec %d))\n",
-			teams - 1);
+			"met_teams_array", int_sort, int_sort);
 
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
