@@ -19,14 +19,17 @@
     (< (sparticus round match slot) team_count))))
 
 ; Assert that for all matches in a round, all slots are distinct.
-(assert (forall ((round Int) (match Int) (slota Int) (slotb Int))
+(assert (forall ((round Int) (matcha Int) (matchb Int) (slota Int) (slotb Int))
   (or (or (> round round_limit) (< round 0))
-  (or (or (> match match_limit) (< match 0))
+  (or (or (> matcha match_limit) (< matcha 0))
+  (or (or (> matchb match_limit) (< matchb 0))
   (or (or (> slota teams_per_round) (< slota 0))
   (or (or (> slotb teams_per_round) (< slotb 0))
-  ; Check they're not the same slot
+  ; Check they're not the same slot or match
   (or (= slota slotb)
+  (or (= matcha matchb)
   ; Ensure they're distinct otherwise
-  (distinct (sparticus round match slota) (sparticus round match slotb)))))))))
+  (distinct (sparticus round matcha slota) (sparticus round matchb slotb)
+))))))))))
 (check-sat)
 ;(get-model)
