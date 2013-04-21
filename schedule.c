@@ -310,39 +310,6 @@ create_goodness_constraints(void)
 		}
 	}
 
-#if 0
-	// And after all that, actually calcumalate who met how many people.
-	// Zero-extend each bit and add them up, then assert that it's the
-	// minimum.
-	for (i = 0; i < teams; i++) {
-		sprintf(scratch_buffer, "(select %s (_ bv%d %d))", oldname,
-				i, teams);
-		char *bitvector = strdup(scratch_buffer);
-
-		sprintf(scratch_buffer, "(_ bv0 %d)", teams);
-		char *accuml_additions = strdup(scratch_buffer);
-
-		for (j = 0; j < teams; j++) {
-			sprintf(scratch_buffer,
-				"(bvadd %s "
-				"(concat zeroprefix ((_ extract %d %d) %s)))",
-				accuml_additions, j, j, bitvector);
-			free(accuml_additions);
-			accuml_additions = strdup(scratch_buffer);
-		}
-
-		// Final assertion placing some limit on this; hard code for now
-		sprintf(scratch_buffer, "(assert (bvugt %s (_ bv1 %d)))\n",
-				accuml_additions, teams);
-		scratch_to_constraint();
-	}
-
-	// Also define zeroprefix
-	sprintf(scratch_buffer, "(assert (= zeroprefix (_ bv0 %d)))\n",
-			teams - 1);
-	scratch_to_constraint();
-#endif
-
 	return;
 }
 
