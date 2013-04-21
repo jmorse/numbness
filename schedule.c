@@ -374,7 +374,7 @@ create_goodness_constraints(void)
 
 		for (j = 0; j < teams; j++) {
 			sprintf(scratch_buffer,
-				"(+ %s "
+				"(bvadd %s "
 				"(concat zeroprefix ((_ extract %d %d) %s)))",
 				accuml_additions, j + 1, j, bitvector);
 			free(accuml_additions);
