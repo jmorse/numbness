@@ -258,11 +258,14 @@ create_goodness_constraints(void)
 	// don't meet the same people repeatedly, which can be addressed later
 	// (and is likely to be much easier).
 	
-	// How to encode this? Can't think of a clever way, so go for the stupid
-	// way: one array per team, nondeterminsitically set fields in a
-	// bitvector indicating who we've met. Apply assertions at the end.
+	// How to encode this? Previous foo hasn't really worked, so try some
+	// quantifiers -- leave a bitvector of who one team has played, assert
+	// in the people who /have/ played them, and then quantify over all
+	// other values of it that there's a minimum number of bits or w/e.
 	// Probably going to be horrible for performance; best we can hope for
-	// is that it reduces the state space to search.
+	// is that it reduces the state space to search. Also given
+	// quantification, might be undecideable, although it's over a finite
+	// domain.
 
 	// Calculate minimum number of people to meet, truncated
 	//int min_people_met = teams * MEET_SPREADING_RATE;
