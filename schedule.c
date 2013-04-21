@@ -279,10 +279,11 @@ create_goodness_constraints(void)
 
 			sprintf(scratch_buffer,
 					"(assert (= met_team_bv_r_%d_m_%d "
+					"(bvor "
 					"(bvor (bvshl (_ bv1 %d) %s) "
 					      "(bvshl (_ bv1 %d) %s))"
 					"(bvor (bvshl (_ bv1 %d) %s) "
-					      "(bvshl (_ bv1 %d) %s))))\n",
+					      "(bvshl (_ bv1 %d) %s)))))\n",
 					      i, j, teams,
 					      schedule_variable_names[i][j][0],
 					      teams,
