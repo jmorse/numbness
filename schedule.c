@@ -49,9 +49,11 @@ int ***match_outcomes;
 
 // Keep constants as global strings so that they can be changed as we change
 // logic.
-const char zero_str[] = "0";
-const char int_sort[] = "Int";
-const char smt_logic[] = "QF_AUFLIRA";
+const char zero_str[] = "(_ bv0 32)";
+const char int_sort[] = "(_ BitVec 32)";
+const char smt_logic[] = "QF_AUFBV";
+const char lt_operator[] = "bvult";
+const char gte_operator[] = "bvuge";
 
 void
 usage(const char *progname)
@@ -129,16 +131,20 @@ create_round_correct_constraints(void)
 	// Start off by constraining each match entry to be in the range of
 	// permissable teams.
 
+	sprintf(scratch_buffer, "(_ bv%d 32)", teams);
+	char *teams_str = strdup(scratch_buffer);
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				sprintf(scratch_buffer, "(assert (>= %s %s))\n",
+				sprintf(scratch_buffer, "(assert (%s %s %s))\n",
+					gte_operator,
 					schedule_variable_names[i][j][k],
 					zero_str);
 				scratch_to_constraint();
-				sprintf(scratch_buffer, "(assert (< %s %d))\n",
+				sprintf(scratch_buffer, "(assert (%s %s %s))\n",
+					lt_operator,
 					schedule_variable_names[i][j][k],
-					teams);
+					teams_str);
 				scratch_to_constraint();
 			}
 		}
@@ -477,8 +483,8 @@ display_solved_model(void)
 		}
 	}
 
-	while (fscanf(file, "((round_%d_match_%d_slot_%d %d))\n", &round,&match,
-				&slot, &team) == 4) {
+	while (fscanf(file, "((round_%d_match_%d_slot_%d (_ bv%d 32)))\n",
+				&round, &match, &slot, &team) == 4) {
 		// Store for later printing
 		assert(round >= 0 && round < rounds);
 		assert(match >= 0 && match < matches_per_round);
