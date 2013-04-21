@@ -26,10 +26,9 @@
   (or (or (> slota teams_per_round) (< slota 0))
   (or (or (> slotb teams_per_round) (< slotb 0))
   ; Check they're not the same slot or match
-  (or (= slota slotb)
-  (or (= matcha matchb)
+  (or (and (= slota slotb) (= matcha matchb))
   ; Ensure they're distinct otherwise
   (distinct (sparticus round matcha slota) (sparticus round matchb slotb)
-))))))))))
+)))))))))
 (check-sat)
 ;(get-model)
