@@ -280,18 +280,16 @@ create_goodness_constraints(void)
 			sprintf(scratch_buffer,
 					"(assert (= met_team_bv_r_%d_m_%d "
 					"(bvor "
-					"(bvor (bvshl (_ bv1 %d) %s) "
-					      "(bvshl (_ bv1 %d) %s))"
-					"(bvor (bvshl (_ bv1 %d) %s) "
-					      "(bvshl (_ bv1 %d) %s)))))\n",
-					      i, j, teams,
-					      schedule_variable_names[i][j][0],
-					      teams,
-					      schedule_variable_names[i][j][1],
-					      teams,
-					      schedule_variable_names[i][j][2],
-					      teams,
-					      schedule_variable_names[i][j][3]);
+					"(bvor (select teambvarr %s) "
+					      "(select teambvarr %s))"
+					"(bvor (select teambvarr %s) "
+					      "(select teambvarr %s))"
+					")))\n",
+				      i, j,
+				      schedule_variable_names[i][j][0],
+				      schedule_variable_names[i][j][1],
+				      schedule_variable_names[i][j][2],
+				      schedule_variable_names[i][j][3]);
 			scratch_to_constraint();
 
 			// Now, or that bv into the corresponding portions of
@@ -308,6 +306,15 @@ create_goodness_constraints(void)
 				scratch_to_constraint();
 			}
 		}
+	}
+
+	// Define that teambvarr. Avoiding dynamic shls
+	for (i = 0; i < teams; i++) {
+		sprintf(scratch_buffer, "(assert (= "
+					"(select teambvarr (_ bv%d %d)) "
+					"(bvshl (_ bv1 %d) (_ bv%d %d))))\n",
+					i, teams, teams, i, teams);
+		scratch_to_constraint();
 	}
 
 	return;
@@ -372,6 +379,8 @@ print_to_solver(void)
 	// One-offs
 	fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
 			"met_teams_array", int_sort, int_sort);
+	fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
+			"teambvarr", int_sort, int_sort);
 
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
