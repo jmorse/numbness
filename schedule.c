@@ -278,15 +278,17 @@ create_goodness_constraints(void)
 		char *newname = NULL;
 
 		for (elemcount = 0; elemcount < teams; elemcount++) {
+			char anotherbuffer[64];
 			sprintf(scratch_buffer,
 					"met_teams_%d_array_round_Z_slot_Z", i);
 			newname = strdup(scratch_buffer);
 
 			// Store into the old buffer, at element elemcount,
 			// the value zero.
+			snprintf(anotherbuffer, 63, "(_ bv%d 32)", elemcount);
 			sprintf(scratch_buffer,
-					"(assert (= %s (store %s %d %s)))\n",
-					oldname, newname, elemcount,
+					"(assert (= %s (store %s %s %s)))\n",
+					oldname, newname, anotherbuffer,
 					team_bv_zero_str);
 			scratch_to_constraint();
 			free(oldname);
@@ -362,10 +364,12 @@ print_to_solver(void)
 	}
 
 	// Met-goodness tracking variables.
+	char anotherbuffer[64];
+	snprintf(anotherbuffer, 63, "(_ BitVec %d)", teams);
 	for (i = 0; i < teams; i++) {
 		sprintf(scratch_buffer, "met_teams_%d_array_round_Z_slot_Z", i);
 		fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
-				scratch_buffer, int_sort, int_sort);
+				scratch_buffer, int_sort, anotherbuffer);
 	}
 				
 
