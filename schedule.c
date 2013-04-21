@@ -412,16 +412,13 @@ print_to_solver(void)
 	}
 
 	// Met-goodness tracking variables.
-	char anotherbuffer[64];
-	snprintf(anotherbuffer, 63, "(_ BitVec %d)", teams);
 	for (i = 0; i < teams; i++) {
 		sprintf(scratch_buffer, "met_teams_array_round_Z_match_%d", i);
 		fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
-				scratch_buffer, int_sort, anotherbuffer);
+				scratch_buffer, int_sort, int_sort);
 	}
 	fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
-			"met_teams_array_round_Z_match_Z", int_sort,
-			anotherbuffer);
+			"met_teams_array_round_Z_match_Z", int_sort, int_sort);
 
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
