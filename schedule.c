@@ -267,8 +267,10 @@ create_goodness_constraints(void)
 	// Calculate minimum number of people to meet, truncated
 	//int min_people_met = teams * MEET_SPREADING_RATE;
 
-#if 0
-	// Create some tracking arrays, zero initialize them.
+	// Create some tracking arrays, zero initialize them. Sort: domain is
+	// 32 bit team ID, range is 2^teamcount bv.
+	sprintf(scratch_buffer, "(_ bv0 %d)", teams);
+	char *team_bv_zero_str = strdup(scratch_buffer);
 	for (i = 0; i < teams; i++) {
 		int elemcount = 0;
 		sprintf(scratch_buffer, "met_teams_%d_array_round_Z_slot_Z", i);
@@ -277,15 +279,15 @@ create_goodness_constraints(void)
 
 		for (elemcount = 0; elemcount < teams; elemcount++) {
 			sprintf(scratch_buffer,
-					"met_teams_%d_array_round_Z_slot_%d",
-					i, elemcount);
+					"met_teams_%d_array_round_Z_slot_Z", i);
 			newname = strdup(scratch_buffer);
 
 			// Store into the old buffer, at element elemcount,
 			// the value zero.
 			sprintf(scratch_buffer,
 					"(assert (= %s (store %s %d %s)))",
-					oldname, newname, elemcount, zero_str);
+					oldname, newname, elemcount,
+					team_bv_zero_str);
 			scratch_to_constraint();
 			free(oldname);
 			oldname = newname;
@@ -293,7 +295,7 @@ create_goodness_constraints(void)
 
 		free(oldname);
 	}
-#endif
+	free(team_bv_zero_str);
 
 #if 0
 	// Now that we're zero inited, start putting some increments in there.
@@ -358,6 +360,14 @@ print_to_solver(void)
 			}
 		}
 	}
+
+	// Met-goodness tracking variables.
+	for (i = 0; i < teams; i++) {
+		sprintf(scratch_buffer, "met_teams_%d_array_round_Z_slot_Z", i);
+		fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
+				scratch_buffer, int_sort, int_sort);
+	}
+				
 
 	// Now start pumping out constraints
 	LIST_FOREACH(ptr, &list_of_constraints, entry) {
