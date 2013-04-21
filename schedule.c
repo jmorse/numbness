@@ -388,6 +388,14 @@ print_to_solver(void)
 			"met_teams_array_round_Z_slot_Z", int_sort,
 			anotherbuffer);
 
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			fprintf(outfile,
+					"(declare-fun met_bv_round_%d_match_%d "
+					"() (_ BitVec %d))\n", i, j, teams);
+		}
+	}
+
 	// Now start pumping out constraints
 	LIST_FOREACH(ptr, &list_of_constraints, entry) {
 		fprintf(outfile, "%s", ptr->string);
