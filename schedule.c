@@ -285,7 +285,7 @@ create_goodness_constraints(void)
 			// Store into the old buffer, at element elemcount,
 			// the value zero.
 			sprintf(scratch_buffer,
-					"(assert (= %s (store %s %d %s)))",
+					"(assert (= %s (store %s %d %s)))\n",
 					oldname, newname, elemcount,
 					team_bv_zero_str);
 			scratch_to_constraint();
