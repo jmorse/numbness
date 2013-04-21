@@ -1,4 +1,3 @@
-; Assume 12 teams, 3 rounds
 (set-info :status unknown)
 (set-option :produce-models true)
 (set-logic AUFLIRA)
@@ -14,12 +13,12 @@
 (assert (forall ((round Int) (match Int) (slot Int))
   (and
     (>= (sparticus round match slot) 0)
-    (< (sparticus round match slot) 12))))
+    (< (sparticus round match slot) team_count))))
 
-; Assert that for all matches (3) in a round, all slots are distinct.
+; Assert that for all matches in a round, all slots are distinct.
 (assert (forall ((round Int) (match Int) (slota Int) (slotb Int))
-  (or (or (> round 3) (< round 0))
-  (or (or (> match 3) (< match 0))
+  (or (or (> round round_limit) (< round 0))
+  (or (or (> match match_limit) (< match 0))
   (or (or (> slota 4) (< slota 0))
   (or (or (> slotb 4) (< slotb 0))
   ; Check they're not the same slot
