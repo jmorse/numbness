@@ -295,10 +295,12 @@ create_goodness_constraints(void)
 			// the tracking array.
 
 			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				sprintf(scratch_buffer, "(assert (bvand "
+				sprintf(scratch_buffer, "(assert (= "
+					"met_team_bv_r_%d_m_%d (bvand "
 					"met_team_bv_r_%d_m_%d "
-					"(select met_team_array %s)))\n",
-					i, j, schedule_variable_names[i][j][k]);
+					"(select met_team_array %s))))\n",
+					i, j, i, j,
+					schedule_variable_names[i][j][k]);
 
 				scratch_to_constraint();
 			}
