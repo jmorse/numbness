@@ -49,8 +49,8 @@ int ***match_outcomes;
 
 // Keep constants as global strings so that they can be changed as we change
 // logic.
-const char zero_str[] = "(_ bv0 32)";
-const char int_sort[] = "(_ BitVec 32)";
+char zero_str[128]; //= "(_ bv0 32)";
+char int_sort[128]; // = "(_ BitVec 32)"; Don't ask
 const char smt_logic[] = "QF_AUFBV";
 const char lt_operator[] = "bvult";
 const char gte_operator[] = "bvuge";
@@ -131,7 +131,7 @@ create_round_correct_constraints(void)
 	// Start off by constraining each match entry to be in the range of
 	// permissable teams.
 
-	sprintf(scratch_buffer, "(_ bv%d 32)", teams);
+	sprintf(scratch_buffer, "(_ bv%d %d)", teams, teams);
 	char *teams_str = strdup(scratch_buffer);
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
@@ -268,7 +268,7 @@ create_goodness_constraints(void)
 	//int min_people_met = teams * MEET_SPREADING_RATE;
 
 	// Create some tracking arrays, zero initialize them. Sort: domain is
-	// 32 bit team ID, range is 2^teamcount bv.
+	// team ID, range is 2^teamcount bv.
 	sprintf(scratch_buffer, "(_ bv0 %d)", teams);
 	char *team_bv_zero_str = strdup(scratch_buffer);
 	sprintf(scratch_buffer, "met_teams_array_round_Z_slot_Z");
@@ -282,7 +282,7 @@ create_goodness_constraints(void)
 
 		// Store into the old buffer, at element elemcount,
 		// the value zero.
-		snprintf(anotherbuffer, 63, "(_ bv%d 32)", i);
+		snprintf(anotherbuffer, 63, "(_ bv%d %d)", i, teams);
 		sprintf(scratch_buffer,
 				"(assert (= %s (store %s %s %s)))\n",
 				newname, oldname, anotherbuffer,
@@ -520,8 +520,9 @@ display_solved_model(void)
 		}
 	}
 
-	while (fscanf(file, "((round_%d_match_%d_slot_%d (_ bv%d 32)))\n",
-				&round, &match, &slot, &team) == 4) {
+	int teams_count;
+	while (fscanf(file, "((round_%d_match_%d_slot_%d (_ bv%d %d)))\n",
+			&round, &match, &slot, &team, &teams_count) == 5) {
 		// Store for later printing
 		assert(round >= 0 && round < rounds);
 		assert(match >= 0 && match < matches_per_round);
@@ -568,6 +569,9 @@ main(int argc, char **argv)
 	matches_per_round = teams / TEAMS_PER_MATCH;
 	if (teams % TEAMS_PER_MATCH != 0)
 		matches_per_round++;
+
+	snprintf(int_sort, 127, "(_ BitVec %d)", teams);
+	snprintf(zero_str, 127, "(_ bv0 %d)", teams);
 
 	// Produce constraints ast
 	create_constraints();
