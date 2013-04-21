@@ -1,9 +1,11 @@
 (set-info :status unknown)
 (set-option :produce-models true)
 (set-logic AUFLIRA)
+
 ; Declare a function taking a round, match, slot, and returns an integer
 ; indicating which team is at that slot.
 (declare-fun sparticus (Int Int Int) Int)
+
 ; Parameterise some things
 (define-fun team_count () Int 12)
 (define-fun round_limit () Int 3)
