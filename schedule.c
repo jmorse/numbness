@@ -354,6 +354,10 @@ create_goodness_constraints(void)
 					schedule_variable_names[i][j][3],
 					varname);
 			scratch_to_constraint();
+
+			free(oldname);
+			free(varname);
+			oldname = newname;
 		}
 	}
 
