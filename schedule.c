@@ -294,19 +294,37 @@ create_goodness_constraints(void)
 	free(oldname);
 	free(team_bv_zero_str);
 
-#if 0
 	// Now that we're zero inited, start putting some increments in there.
 	// Quite a number, unfortunately.
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
-			for (k = 0; k < TEAMS_PER_MATCH; k++) {
-				// For each /other/ team in the match, encode
-				// an addition.
-				int l;
-				for (l = 0; l < TEAMS_PER_MATCH; l++) {
-					if (l == k)
-						continue;
-#endif
+			// For every match, calculate the bitmask of who meets
+			// in it. As a string. Bah, this can be a variable as
+			// well then.
+			sprintf(scratch_buffer, "met_bv_round_%d_match_%d",
+					i, j);
+			char *varname = strdup(scratch_buffer);
+			sprintf(scratch_buffer, "(assert (= %s (bvor "
+					"(bvor (bvshl (_ bv1 %d) %s) "
+					      "(bvshl (_ bv1 %d) %s))"
+					"(bvor (bvshl (_ bv1 %d) %s) "
+					      "(bvshl (_ bv1 %d) %s)))))",
+					      varname, teams,
+					      schedule_variable_names[i][j][0],
+					      teams,
+					      schedule_variable_names[i][j][1],
+					      teams,
+					      schedule_variable_names[i][j][2],
+					      teams,
+					      schedule_variable_names[i][j][3]);
+			scratch_to_constraint();
+
+			// Now, or that bv into the corresponding portions of
+			// the tracking array.
+
+			// later
+		}
+	}
 
 	return;
 }
