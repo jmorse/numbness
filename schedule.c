@@ -259,10 +259,10 @@ create_goodness_constraints(void)
 	// (and is likely to be much easier).
 	
 	// How to encode this? Can't think of a clever way, so go for the stupid
-	// way: one array per team, nondeterminsitically increment elements in
-	// each array every round, apply assertions at the end. Probably going
-	// to be horrible for performance; best we can hope for is that it
-	// reduces the state space to search.
+	// way: one array per team, nondeterminsitically set fields in a
+	// bitvector indicating who we've met. Apply assertions at the end.
+	// Probably going to be horrible for performance; best we can hope for
+	// is that it reduces the state space to search.
 
 	// Calculate minimum number of people to meet, truncated
 	//int min_people_met = teams * MEET_SPREADING_RATE;
