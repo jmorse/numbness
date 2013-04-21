@@ -271,13 +271,13 @@ create_goodness_constraints(void)
 	// team ID, range is 2^teamcount bv.
 	sprintf(scratch_buffer, "(_ bv0 %d)", teams);
 	char *team_bv_zero_str = strdup(scratch_buffer);
-	sprintf(scratch_buffer, "met_teams_array_round_Z_slot_Z");
+	sprintf(scratch_buffer, "met_teams_array_round_Z_match_Z");
 	char *oldname = strdup(scratch_buffer);
 	char *newname = NULL;
 	for (i = 0; i < teams; i++) {
 		char anotherbuffer[64];
 
-		sprintf(scratch_buffer, "met_teams_array_round_Z_slot_%d", i);
+		sprintf(scratch_buffer, "met_teams_array_round_Z_match_%d", i);
 		newname = strdup(scratch_buffer);
 
 		// Store into the old buffer, at element elemcount,
@@ -380,12 +380,12 @@ print_to_solver(void)
 	char anotherbuffer[64];
 	snprintf(anotherbuffer, 63, "(_ BitVec %d)", teams);
 	for (i = 0; i < teams; i++) {
-		sprintf(scratch_buffer, "met_teams_array_round_Z_slot_%d", i);
+		sprintf(scratch_buffer, "met_teams_array_round_Z_match_%d", i);
 		fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
 				scratch_buffer, int_sort, anotherbuffer);
 	}
 	fprintf(outfile, "(declare-fun %s () (Array %s %s))\n",
-			"met_teams_array_round_Z_slot_Z", int_sort,
+			"met_teams_array_round_Z_match_Z", int_sort,
 			anotherbuffer);
 
 	for (i = 0; i < rounds; i++) {
