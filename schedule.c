@@ -308,7 +308,7 @@ create_goodness_constraints(void)
 					"(bvor (bvshl (_ bv1 %d) %s) "
 					      "(bvshl (_ bv1 %d) %s))"
 					"(bvor (bvshl (_ bv1 %d) %s) "
-					      "(bvshl (_ bv1 %d) %s)))))",
+					      "(bvshl (_ bv1 %d) %s)))))\n",
 					      varname, teams,
 					      schedule_variable_names[i][j][0],
 					      teams,
