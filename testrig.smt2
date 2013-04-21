@@ -8,9 +8,9 @@
 
 ; Parameterise some things
 ; FIXME: when teamcount doesn't fit in BV sort?
-(define-fun team_count () (_ BitVec 6) (_ bv12 6))
-(define-fun round_limit () (_ BitVec 6) (_ bv6 6))
-(define-fun match_limit () (_ BitVec 6) (_ bv3 6))
+(define-fun team_count () (_ BitVec 6) (_ bv32 6))
+(define-fun round_limit () (_ BitVec 6) (_ bv13 6))
+(define-fun match_limit () (_ BitVec 6) (_ bv8 6))
 (define-fun teams_per_round () (_ BitVec 6) (_ bv4 6))
 
 ; Assert that for all slots, the outcome is in range.
