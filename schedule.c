@@ -423,6 +423,14 @@ print_to_solver(void)
 	for (i = 0; i < rounds; i++) {
 		for (j = 0; j < matches_per_round; j++) {
 			fprintf(outfile,
+			"(declare-fun met_teams_array_round_%d_match_%d "
+			"() (Array %s %s))\n", i, j, int_sort, int_sort);
+		}
+	}
+
+	for (i = 0; i < rounds; i++) {
+		for (j = 0; j < matches_per_round; j++) {
+			fprintf(outfile,
 					"(declare-fun met_bv_round_%d_match_%d "
 					"() (_ BitVec %d))\n", i, j, teams);
 		}
