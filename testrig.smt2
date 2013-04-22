@@ -31,6 +31,8 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
 ; Explicitly pump in match separation rather than logic it up.
 (assert (forall ((round (_ BitVec 4)) (slota (_ BitVec 2)) (slotb (_ BitVec 2)) (slotc (_ BitVec 2)) (slotd (_ BitVec 2)) (slote (_ BitVec 2)))
   ; hardcode for 32 teams 8 matches, 1 round seperation
+  ; Note to self: encoding forall's explicitly (i.e., enumerating slots)
+  ; provided a tiny (~10s) speedup from 6:40 to 6:30ish. Probably not worth it.
   (let ((nextround (bvadd round (_ bv1 4))))
   (and
      (distinct (sparticus round (_ bv4 4) slota)
