@@ -37,11 +37,7 @@
     (distinct (sparticus round1 match1 slot1) (sparticus round2 match2 slot2)
 ))))
 
-; Assert that for all pairs of slots across the round boundry, there's at
-; least N matches of separation.
-(assert (forall ((round (_ BitVec 6)) (matcha (_ BitVec 6)) (matchb (_ BitVec 6)) (slota (_ BitVec 6)) (slotb (_ BitVec 6)))
-  ; Only care about round boundries, limit round number to < round_limt-1
-  (or (bvuge (bvadd round (_ bv1 6)) round_limit)
+(assert (forall ((round (_ BitVec 6)) (matcha (_ BitVec 6)) (matchb (_ BitVec 6)))
   ; match b must be within N of the start of the round
   (or (bvugt matchb match_separation)
   ; match a takes normal limit...
@@ -50,10 +46,10 @@
   ; FIXME: funky logic.
   (or (bvugt (bvsub (bvadd matchb match_limit) matcha) match_separation)
   ; Don't apply to the same match/slot
-  (or (and (= slota slotb) (= matcha matchb))
+  (or (= matcha matchb)
   ; The actual constraint: these this must be distinct
-  (distinct (sparticus round matcha slota) (sparticus round matchb slotb)
-))))))))
+  (match_distinct round matcha (bvadd round (_ bv1 6)) matchb)
+))))))
 
 (check-sat)
 ;(get-model)
