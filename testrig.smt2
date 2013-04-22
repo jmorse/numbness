@@ -32,13 +32,14 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
 ; Explicitly pump in match separation rather than logic it up.
 (assert (forall ((round (_ BitVec 4)) (slota (_ BitVec 2)) (slotb (_ BitVec 2)) (slotc (_ BitVec 2)))
   ; hardcode for 32 teams 8 matches, 1 round seperation
+  (let ((nextround (bvadd round (_ bv1 4))))
   (and
      (distinct (sparticus round (_ bv6 4) slota)
               (sparticus round (_ bv7 4) slotb)
-              (sparticus (bvadd round (_ bv1 4)) (_ bv0 4) slotc))
+              (sparticus nextround (_ bv0 4) slotc))
      (distinct (sparticus round (_ bv7 4) slota)
-              (sparticus (bvadd round (_ bv1 4)) (_ bv0 4) slotb)
-              (sparticus (bvadd round (_ bv1 4)) (_ bv1 4) slotc)))))
+              (sparticus nextround (_ bv0 4) slotb)
+              (sparticus nextround (_ bv1 4) slotc))))))
 
 (check-sat)
 ;(get-model)
