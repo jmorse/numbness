@@ -14,7 +14,6 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
 
 ; Parameterise some things
 ; FIXME: when teamcount doesn't fit in BV sort?
-(define-fun team_count () (_ BitVec 4) (_ bv32 4))
 (define-fun round_limit () (_ BitVec 4) (_ bv4 4))
 (define-fun match_limit () (_ BitVec 4) (_ bv8 4))
 (define-fun match_separation () (_ BitVec 4) (_ bv1 4))
