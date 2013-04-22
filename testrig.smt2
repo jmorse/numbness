@@ -14,7 +14,7 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
 
 ; Parameterise some things
 ; FIXME: when teamcount doesn't fit in BV sort?
-(define-fun round_limit () (_ BitVec 4) (_ bv4 4))
+(define-fun round_limit () (_ BitVec 4) (_ bv2 4))
 (define-fun match_limit () (_ BitVec 4) (_ bv8 4))
 
 ; Assert that for all matches in a round, all slots are distinct.
@@ -29,24 +29,34 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
 )))))))
 
 ; Explicitly pump in match separation rather than logic it up.
-(assert (forall ((round (_ BitVec 4)) (slota (_ BitVec 2)) (slotb (_ BitVec 2)) (slotc (_ BitVec 2)) (slotd (_ BitVec 2)))
+(assert (forall ((round (_ BitVec 4)) (slota (_ BitVec 2)) (slotb (_ BitVec 2)) (slotc (_ BitVec 2)) (slotd (_ BitVec 2)) (slote (_ BitVec 2)))
   ; hardcode for 32 teams 8 matches, 1 round seperation
   (let ((nextround (bvadd round (_ bv1 4))))
+  (and
+     (distinct (sparticus round (_ bv4 4) slota)
+               (sparticus round (_ bv5 4) slotb)
+               (sparticus round (_ bv6 4) slotc)
+               (sparticus round (_ bv7 4) slotd)
+               (sparticus nextround (_ bv0 4) slote))
   (and
      (distinct (sparticus round (_ bv5 4) slota)
                (sparticus round (_ bv6 4) slotb)
                (sparticus round (_ bv7 4) slotc)
-               (sparticus nextround (_ bv0 4) slotd))
+               (sparticus nextround (_ bv0 4) slotd)
+               (sparticus nextround (_ bv1 4) slote))
   (and
      (distinct (sparticus round (_ bv6 4) slota)
                (sparticus round (_ bv7 4) slotb)
                (sparticus nextround (_ bv0 4) slotc)
-               (sparticus nextround (_ bv1 4) slotd))
+               (sparticus nextround (_ bv1 4) slotd)
+               (sparticus nextround (_ bv2 4) slote))
   (and
      (distinct (sparticus round (_ bv7 4) slota)
                (sparticus nextround (_ bv0 4) slotb)
                (sparticus nextround (_ bv1 4) slotc)
-               (sparticus nextround (_ bv2 4) slotd))))))))
+               (sparticus nextround (_ bv2 4) slotd)
+               (sparticus nextround (_ bv3 4) slote)))))))))
+
 
 (check-sat)
 ;(get-model)
