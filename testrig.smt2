@@ -28,13 +28,7 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
   ; Ensure they're distinct otherwise
   (distinct (sparticus round matcha slota) (sparticus round matchb slotb)
 )))))))
-;
-;(declare-fun match_distinct ((_ BitVec 4) (_ BitVec 4) (_ BitVec 4) (_ BitVec 4)) Bool)
-;(assert (forall ((round1 (_ BitVec 4)) (match1 (_ BitVec 4)) (slot1 (_ BitVec 4)) (round2 (_ BitVec 4)) (match2 (_ BitVec 4)) (slot2 (_ BitVec 4)))
-;  (=> (match_distinct round1 match1 round2 match2)
-;    (distinct (sparticus round1 match1 slot1) (sparticus round2 match2 slot2)
-;))))
-;
+
 ; Explicitly pump in match separation rather than logic it up.
 (assert (forall ((round (_ BitVec 4)) (slota (_ BitVec 2)) (slotb (_ BitVec 2)) (slotc (_ BitVec 2)))
   ; hardcode for 32 teams 8 matches, 1 round seperation
