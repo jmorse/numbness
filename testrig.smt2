@@ -16,7 +16,6 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
 ; FIXME: when teamcount doesn't fit in BV sort?
 (define-fun round_limit () (_ BitVec 4) (_ bv4 4))
 (define-fun match_limit () (_ BitVec 4) (_ bv8 4))
-(define-fun match_separation () (_ BitVec 4) (_ bv1 4))
 
 ; Assert that for all matches in a round, all slots are distinct.
 (assert (forall ((round (_ BitVec 4)) (matcha (_ BitVec 4)) (matchb (_ BitVec 4)) (slota (_ BitVec 2)) (slotb (_ BitVec 2)))
