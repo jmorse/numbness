@@ -19,11 +19,11 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
 
 ; Assert that for all matches in a round, all slots are distinct.
 (assert (forall ((round (_ BitVec 4)) (matcha (_ BitVec 4)) (matchb (_ BitVec 4)) (slota (_ BitVec 2)) (slotb (_ BitVec 2)))
-  (or (bvuge round round_limit)
-  (or (bvuge matcha match_limit)
-  (or (bvuge matchb match_limit)
+  (=> (bvult round round_limit)
+  (=> (bvult matcha match_limit)
+  (=> (bvult matchb match_limit)
   ; Check they're not the same slot or match
-  (or (and (= slota slotb) (= matcha matchb))
+  (=> (not (and (= slota slotb) (= matcha matchb)))
   ; Ensure they're distinct otherwise
   (distinct (sparticus round matcha slota) (sparticus round matchb slotb)
 )))))))
