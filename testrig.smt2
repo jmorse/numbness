@@ -34,6 +34,7 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
   ; Note to self: encoding forall's explicitly (i.e., enumerating slots)
   ; provided a tiny (~10s) speedup from 6:40 to 6:30ish. Probably not worth it.
   (let ((nextround (bvadd round (_ bv1 4))))
+  (=> (bvult nextround round_limit)
   (and
      (distinct (sparticus round (_ bv4 4) slota)
                (sparticus round (_ bv5 4) slotb)
@@ -57,7 +58,7 @@ t24 t25 t26 t27 t28 t29 t30 t31)))
                (sparticus nextround (_ bv0 4) slotb)
                (sparticus nextround (_ bv1 4) slotc)
                (sparticus nextround (_ bv2 4) slotd)
-               (sparticus nextround (_ bv3 4) slote)))))))))
+               (sparticus nextround (_ bv3 4) slote))))))))))
 
 
 (check-sat)
