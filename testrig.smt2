@@ -31,6 +31,12 @@
   (distinct (sparticus round matcha slota) (sparticus round matchb slotb)
 )))))))))
 
+(declare-fun match_distinct ((_ BitVec 6) (_ BitVec 6) (_ BitVec 6) (_ BitVec 6)) Bool)
+(assert (forall ((round1 (_ BitVec 6)) (match1 (_ BitVec 6)) (slot1 (_ BitVec 6)) (round2 (_ BitVec 6)) (match2 (_ BitVec 6)) (slot2 (_ BitVec 6)))
+  (=> (match_distinct round1 match1 round2 match2)
+    (distinct (sparticus round1 match1 slot1) (sparticus round2 match2 slot2)
+))))
+
 ; Assert that for all pairs of slots across the round boundry, there's at
 ; least N matches of separation.
 (assert (forall ((round (_ BitVec 6)) (matcha (_ BitVec 6)) (matchb (_ BitVec 6)) (slota (_ BitVec 6)) (slotb (_ BitVec 6)))
