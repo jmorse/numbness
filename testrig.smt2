@@ -2,6 +2,8 @@
 (set-option :produce-models true)
 ; Logic is now "Whatever Z3 accepts" (set-logic AUFBV)
 
+; Note to self: nothing achieved by changing from BV's to ints.
+
 (declare-datatypes () ((TEAM t00 t01 t02 t03 t04 t05 t06 t07 t08 t09 t10 t11)))
 
 ; Declare a function taking a round, match, slot, and returns an integer
