@@ -1,10 +1,12 @@
 (set-info :status unknown)
 (set-option :produce-models true)
-(set-logic AUFBV)
+; Logic is now "Whatever Z3 accepts" (set-logic AUFBV)
+
+(declare-datatypes () ((TEAM t00 t01 t02 t03 t04 t05 t06 t07 t08 t09 t10 t11)))
 
 ; Declare a function taking a round, match, slot, and returns an integer
 ; indicating which team is at that slot.
-(declare-fun sparticus ((_ BitVec 6) (_ BitVec 6) (_ BitVec 6)) (_ BitVec 6))
+(declare-fun sparticus ((_ BitVec 6) (_ BitVec 6) (_ BitVec 6)) TEAM)
 
 ; Parameterise some things
 ; FIXME: when teamcount doesn't fit in BV sort?
@@ -13,10 +15,6 @@
 (define-fun match_limit () (_ BitVec 6) (_ bv3 6))
 (define-fun teams_per_round () (_ BitVec 6) (_ bv4 6))
 (define-fun match_separation () (_ BitVec 6) (_ bv1 6))
-
-; Assert that for all slots, the outcome is in range.
-(assert (forall ((round (_ BitVec 6)) (match (_ BitVec 6)) (slot (_ BitVec 6)))
-    (bvult (sparticus round match slot) team_count)))
 
 ; Assert that for all matches in a round, all slots are distinct.
 (assert (forall ((round (_ BitVec 6)) (matcha (_ BitVec 6)) (matchb (_ BitVec 6)) (slota (_ BitVec 6)) (slotb (_ BitVec 6)))
