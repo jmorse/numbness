@@ -24,7 +24,7 @@ print "(declare-datatypes () ((TEAM "
 for i in range(NUMTEAMS):
 	print "t{0}".format(i),
 
-print ")"
+print ")))"
 
 # The uninterpreted function that's going to become our scheduler. Takes a
 # 4 bit round, 4 bit match, 2 bit slot, returns a team.
