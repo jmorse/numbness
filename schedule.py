@@ -1,5 +1,10 @@
 #!/usr/bin/python
 
+# More flexible parameters
+NUMROUNDS = 2
+NUMMATCHES = 3
+
+# More built in parameters.
 NUMTEAMS = 12
 ROUNDBITS = 4
 MATCHBITS = 4
@@ -23,3 +28,9 @@ print ")"
 print ""
 print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
 print ""
+
+# Ensure all slots over all matchs per round are distinct.
+
+for i in range(NUMROUNDS):
+	for j in range(NUMMATCHES):
+		pass
