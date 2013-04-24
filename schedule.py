@@ -3,9 +3,12 @@
 # More flexible parameters
 NUMROUNDS = 2
 NUMMATCHES = 3
+NUMTEAMS = 12
 
 # More built in parameters.
-NUMTEAMS = 12
+NUMSLOTS = 4
+
+# Underlying bitwidths
 ROUNDBITS = 4
 MATCHBITS = 4
 SLOTBITS = 2
@@ -32,5 +35,9 @@ print ""
 # Ensure all slots over all matchs per round are distinct.
 
 for i in range(NUMROUNDS):
+	print "; round {0}".format(i)
+	print "(assert (distinct "
 	for j in range(NUMMATCHES):
-		pass
+		for k in range(NUMSLOTS):
+			print "(sparticus {0} {1} {2})".format(i, j, k)
+	print "))"
