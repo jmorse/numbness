@@ -13,6 +13,10 @@ ROUNDBITS = 4
 MATCHBITS = 4
 SLOTBITS = 2
 
+# Integer constants are different in different logics
+def print_integer(val, width):
+	return "(_ bv{0} {1})".format(val, width)
+
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
 print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
@@ -39,7 +43,10 @@ for i in range(NUMROUNDS):
 	print "(assert (distinct "
 	for j in range(NUMMATCHES):
 		for k in range(NUMSLOTS):
-			print "(sparticus (_ bv{0} {1}) (_ bv{2} {3}) (_ bv{4} {5}))".format(i, ROUNDBITS, j, MATCHBITS, k, SLOTBITS)
+			print "(sparticus {0} {1} {2})".format(
+					print_integer(i, ROUNDBITS),
+					print_integer(j, MATCHBITS),
+					print_integer(k, SLOTBITS))
 	print "))"
 
 print "(check-sat)"
