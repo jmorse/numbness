@@ -12,3 +12,9 @@ for i in range(12):
 	print "t{0}".format(i),
 
 print ")"
+
+# The uninterpreted function that's going to become our scheduler. Takes a
+# 4 bit round, 4 bit match, 2 bit slot, returns a team.
+print ""
+print "(declare-fun sparticus ((_ BitVec 4) (_ BitVec 4) (_ BitVec 2)) TEAM)"
+print ""
