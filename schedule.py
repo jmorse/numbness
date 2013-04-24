@@ -43,3 +43,12 @@ for i in range(NUMROUNDS):
 	print "))"
 
 print "(check-sat)"
+
+# Also, fetch the outcome from each point.
+
+print ""
+for i in range(NUMROUNDS):
+	for j in range(NUMMATCHES):
+		for k in range(NUMSLOTS):
+			pass
+			#print "(get-value (sparticus {0}
