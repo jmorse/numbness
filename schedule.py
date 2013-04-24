@@ -39,5 +39,5 @@ for i in range(NUMROUNDS):
 	print "(assert (distinct "
 	for j in range(NUMMATCHES):
 		for k in range(NUMSLOTS):
-			print "(sparticus {0} {1} {2})".format(i, j, k)
+			print "(sparticus (_ bv{0} {1}) (_ bv{2} {3}) (_ bv{4} {5}))".format(i, ROUNDBITS, j, MATCHBITS, k, SLOTBITS)
 	print "))"
