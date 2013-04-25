@@ -10,6 +10,10 @@ NUMTEAMS = 32
 close_constraints = True
 CLOSENESS = 5
 
+min_met_constraints = True
+MINMET = 1
+METBITS = 4
+
 # More built in parameters.
 NUMSLOTS = 4
 
@@ -109,6 +113,58 @@ if close_constraints:
 					print sparticus(this_round,this_match,i)
 
 			print "))"
+		print ""
+
+
+if min_met_constraints:
+	# Optionally state that, as a bare minimum, each team must meet
+	# at least N other teams. State this as being some other uninterpreted
+	# functions that for 0..MINMET as inputs return the round/match/slots
+	# identifying pairings of matches containing this team and a distinct
+	# other team.
+	print "; Func declarations for min-met constraints"
+	print "(declare-fun pick_met_match_round ((_ BitVec {0}) (_ BitVec {1})) (_ BitVec {2}))".format(TEAMBITS, METBITS, ROUNDBITS)
+	print "(declare-fun pick_met_match_match ((_ BitVec {0}) (_ BitVec {1})) (_ BitVec {2}))".format(TEAMBITS, METBITS, MATCHBITS)
+	print "(declare-fun pick_met_match_slot ((_ BitVec {0}) (_ BitVec {1}) (Bool)) (_ BitVec {2}))".format(TEAMBITS, METBITS, SLOTBITS)
+
+	# Enumerate the pairings for each team.
+	for i in range(NUMTEAMS):
+		this_team_str = print_integer(i, TEAMBITS)
+		print "; min-met constraints for team {0}".format(i)
+		# The encoding: that calling sparticus with the outputs of the
+		# above functions, with the thisteam argument as true, always
+		# returns this team ID; and doing the same with thisteam set to
+		# false identifies a bunch of other teams.
+
+		# First, the constraint that we're picking matches with this
+		# team in it.
+		# Up to MINMET pairings,
+		for j in range(MINMET):
+			this_met_idx = print_integer(j, METBITS)
+			print "(assert (= {0}".format(i),
+			print "(sparticus {0} {1} {2})))".format(
+				"(pick_met_match_round {0} {1})"
+				.format(this_team_str, this_met_idx),
+				"(pick_met_match_match {0} {1})"
+				.format(this_team_str, this_met_idx),
+				"(pick_met_match_slot {0} {1} True)"
+				.format(this_team_str, this_met_idx))
+
+		# Now constraint that all the other matches are distinct. Plus
+		# distinct from the team we're working on now, just in case the
+		# solver sneakily slips them in there.
+		print "; Distinct-min-met outputs for team {0}".format(i)
+		print "(assert (distinct {0}".format(this_team_str)
+		for j in range(MINMET):
+			this_met_idx = print_integer(j, METBITS)
+			print "(sparticus {0} {1} {2})".format(
+				"(pick_met_match_round {0} {1})"
+				.format(this_team_str, this_met_idx),
+				"(pick_met_match_match {0} {1})"
+				.format(this_team_str, this_met_idx),
+				"(pick_met_match_slot {0} {1} False)"
+				.format(this_team_str, this_met_idx))
+		print "))"
 		print ""
 
 # Instruct solver to check satisfiability at this point
