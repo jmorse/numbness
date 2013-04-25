@@ -3,12 +3,12 @@
 import sys
 
 # More flexible parameters
-NUMROUNDS = 2
-NUMMATCHES = 3
-NUMTEAMS = 12
+NUMROUNDS = 13
+NUMMATCHES = 8
+NUMTEAMS = 32
 
 close_constraints = True
-CLOSENESS = 2
+CLOSENESS = 5
 
 # More built in parameters.
 NUMSLOTS = 4
