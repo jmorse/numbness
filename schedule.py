@@ -125,7 +125,7 @@ if min_met_constraints:
 	print "; Func declarations for min-met constraints"
 	print "(declare-fun pick_met_match_round ((_ BitVec {0}) (_ BitVec {1})) (_ BitVec {2}))".format(TEAMBITS, METBITS, ROUNDBITS)
 	print "(declare-fun pick_met_match_match ((_ BitVec {0}) (_ BitVec {1})) (_ BitVec {2}))".format(TEAMBITS, METBITS, MATCHBITS)
-	print "(declare-fun pick_met_match_slot ((_ BitVec {0}) (_ BitVec {1}) (Bool)) (_ BitVec {2}))".format(TEAMBITS, METBITS, SLOTBITS)
+	print "(declare-fun pick_met_match_slot ((_ BitVec {0}) (_ BitVec {1}) Bool) (_ BitVec {2}))".format(TEAMBITS, METBITS, SLOTBITS)
 
 	# Enumerate the pairings for each team.
 	for i in range(NUMTEAMS):
@@ -147,7 +147,7 @@ if min_met_constraints:
 				.format(this_team_str, this_met_idx),
 				"(pick_met_match_match {0} {1})"
 				.format(this_team_str, this_met_idx),
-				"(pick_met_match_slot {0} {1} True)"
+				"(pick_met_match_slot {0} {1} true)"
 				.format(this_team_str, this_met_idx))
 
 		# Now constraint that all the other matches are distinct. Plus
@@ -162,7 +162,7 @@ if min_met_constraints:
 				.format(this_team_str, this_met_idx),
 				"(pick_met_match_match {0} {1})"
 				.format(this_team_str, this_met_idx),
-				"(pick_met_match_slot {0} {1} False)"
+				"(pick_met_match_slot {0} {1} false)"
 				.format(this_team_str, this_met_idx))
 		print "))"
 		print ""
