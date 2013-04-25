@@ -26,6 +26,11 @@ USE_Z3 = False
 def print_integer(val, width):
 	return "(_ bv{0} {1})".format(val, width)
 
+def sparticus(r, match, slot):
+	return "(sparticus {0} {1} {2})".format(print_integer(r, ROUNDBITS),
+			print_integer(match, MATCHBITS),
+			print_integer(slot, SLOTBITS))
+
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
 if USE_Z3:
@@ -59,10 +64,7 @@ else:
 		for j in range(NUMMATCHES):
 			for k in range(NUMSLOTS):
 				print "(assert (bvult ",
-				print "(sparticus {0} {1} {2})".format(
-						print_integer(i, ROUNDBITS),
-						print_integer(j, MATCHBITS),
-						print_integer(k, SLOTBITS)),
+				print sparticus(i, j, k),
 				print print_integer(NUMTEAMS, TEAMBITS),
 				print "))"
 
@@ -73,10 +75,7 @@ for i in range(NUMROUNDS):
 	print "(assert (distinct "
 	for j in range(NUMMATCHES):
 		for k in range(NUMSLOTS):
-			print "(sparticus {0} {1} {2})".format(
-					print_integer(i, ROUNDBITS),
-					print_integer(j, MATCHBITS),
-					print_integer(k, SLOTBITS))
+			print sparticus(i, j, k)
 	print "))"
 
 # Optionally add goodness constraints.
@@ -105,10 +104,7 @@ if close_constraints:
 				this_round = r + 1
 
 			for i in range(NUMSLOTS):
-				print "(sparticus {0} {1} {2})".format(
-					print_integer(this_round, ROUNDBITS),
-					print_integer(this_match, MATCHBITS),
-					print_integer(i, SLOTBITS))
+				print sparticus(this_round, this_match, i)
 
 		print "))"
 		print ""
