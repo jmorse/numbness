@@ -111,6 +111,8 @@ if close_constraints:
 			print "))"
 		print ""
 
+# Instruct solver to check satisfiability at this point
+
 print "(check-sat)"
 
 # Also, fetch the outcome from each point.
