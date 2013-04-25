@@ -92,7 +92,7 @@ if close_constraints:
 		# distinct participants to ensure they always have CLOSENESS
 		# matches between each match of theirs. Each CLOSENESS+1 number
 		# of matches is a span, in which those matches must be distinct.
-		for span in range(CLOSENESS + 1):
+		for span in range(CLOSENESS):
 			start_match = NUMMATCHES - CLOSENESS + span
 			print "; Span goodness {0}".format(span)
 			print "(assert (distinct"
