@@ -87,7 +87,6 @@ if close_constraints:
 	# For each round boundry,
 	for r in range(NUMROUNDS-1):
 		print "; Goodness for round boundry {0}".format(r)
-		print "(assert (distinct"
 
 		# Each CLOSENESS+1 matches across the round boundry must have
 		# distinct participants to ensure they always have CLOSENESS
@@ -95,6 +94,8 @@ if close_constraints:
 		# of matches is a span, in which those matches must be distinct.
 		for span in range(CLOSENESS + 1):
 			start_match = NUMMATCHES - CLOSENESS + span
+			print "; Span goodness {0}".format(span)
+			print "(assert (distinct"
 			for offs in range(CLOSENESS + 1):
 				# The range of matches we're interested in is
 				# from `start_match` in the earlier round
@@ -107,7 +108,7 @@ if close_constraints:
 				for i in range(NUMSLOTS):
 					print sparticus(this_round,this_match,i)
 
-		print "))"
+			print "))"
 		print ""
 
 print "(check-sat)"
