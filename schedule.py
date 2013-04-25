@@ -17,6 +17,10 @@ NUMSLOTS = 4
 ROUNDBITS = 4
 MATCHBITS = 4
 SLOTBITS = 2
+TEAMBITS = 6
+
+# Optionally use more more elaborate Z3 things
+USE_Z3 = False
 
 # Integer constants are different in different logics
 def print_integer(val, width):
@@ -24,22 +28,43 @@ def print_integer(val, width):
 
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
-print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
+if USE_Z3:
+	print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
+else:
+	print "(set-logic QF_AUFBV)"
 print ""
 
 # Configurable number of enum members
 
-print "(declare-datatypes () ((TEAM "
-for i in range(NUMTEAMS):
-	print "t{0}".format(i),
+if USE_Z3:
+	print "(declare-datatypes () ((TEAM "
+	for i in range(NUMTEAMS):
+		print "t{0}".format(i),
+	print ")))"
 
-print ")))"
+	# The uninterpreted function that's going to become our scheduler.
+	# Takes a 4 bit round, 4 bit match, 2 bit slot, returns a team.
+	print ""
+	print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
+	print ""
+else:
+	print ""
+	print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) (_ BitVec {3}))".format(ROUNDBITS, MATCHBITS, SLOTBITS, TEAMBITS)
+	print ""
 
-# The uninterpreted function that's going to become our scheduler. Takes a
-# 4 bit round, 4 bit match, 2 bit slot, returns a team.
-print ""
-print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
-print ""
+	# If not Z3, don't use enum type, and instead we have some bitvectors
+	# with one number identifying one team. Constraint to the number of
+	#teams.
+	for i in range(NUMROUNDS):
+		for j in range(NUMMATCHES):
+			for k in range(NUMSLOTS):
+				print "(assert (bvult ",
+				print "(sparticus {0} {1} {2})".format(
+						print_integer(i, ROUNDBITS),
+						print_integer(j, MATCHBITS),
+						print_integer(k, SLOTBITS)),
+				print print_integer(NUMTEAMS, TEAMBITS),
+				print "))"
 
 # Ensure all slots over all matchs per round are distinct.
 
