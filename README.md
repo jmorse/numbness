@@ -37,3 +37,11 @@ The current list of constraints placed on the schedule:
 Some goodness criteria that will be added to see if the solver can generate a
 formula that satisfies them are:
  * Distribution of opponents
+
+As for changing these constraints, they're all defined at the start of the
+python formula generator. They can be changed, but it's '''not really
+recommended until some more documentation materialises'''. Changing some things
+requires the bitwidths of the underlying formula to be changed too; some other
+factors such as there being four teams per match, and always a multiple of
+four number of teams, are built in at a more fundemental level. Hang around
+and these things will be slowly massaged out.
