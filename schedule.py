@@ -4,8 +4,8 @@ import sys
 
 # More flexible parameters
 NUMROUNDS = 2
-NUMMATCHES = 8
-NUMTEAMS = 32
+NUMMATCHES = 3
+NUMTEAMS = 12
 
 close_constraints = True
 CLOSENESS = 2
@@ -93,18 +93,19 @@ if close_constraints:
 		# distinct participants to ensure they always have CLOSENESS
 		# matches between each match of theirs. Each CLOSENESS+1 number
 		# of matches is a span, in which those matches must be distinct.
-		start_match = NUMMATCHES - CLOSENESS
 		for span in range(CLOSENESS + 1):
-			# The range of matches we're interested in is from
-			# `start_match` in the earlier round through to round
-			# `span` in the later round.
-			this_match = (start_match + span) % NUMMATCHES
-			this_round = r
-			if this_match < start_match:
-				this_round = r + 1
+			start_match = NUMMATCHES - CLOSENESS + span
+			for offs in range(CLOSENESS + 1):
+				# The range of matches we're interested in is
+				# from `start_match` in the earlier round
+				# through to round `span` in the later round.
+				this_match = (start_match + offs) % NUMMATCHES
+				this_round = r
+				if this_match < start_match:
+					this_round = r + 1
 
-			for i in range(NUMSLOTS):
-				print sparticus(this_round, this_match, i)
+				for i in range(NUMSLOTS):
+					print sparticus(this_round,this_match,i)
 
 		print "))"
 		print ""
