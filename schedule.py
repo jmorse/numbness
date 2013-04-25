@@ -94,7 +94,7 @@ if close_constraints:
 		# matches between each match of theirs. Each CLOSENESS+1 number
 		# of matches is a span, in which those matches must be distinct.
 		start_match = NUMMATCHES - CLOSENESS
-		for span in range(CLOSENESS):
+		for span in range(CLOSENESS + 1):
 			# The range of matches we're interested in is from
 			# `start_match` in the earlier round through to round
 			# `span` in the later round.
