@@ -141,7 +141,7 @@ if min_met_constraints:
 		# Up to MINMET pairings,
 		for j in range(MINMET):
 			this_met_idx = print_integer(j, METBITS)
-			print "(assert (= {0}".format(i),
+			print "(assert (= {0}".format(this_team_str),
 			print "(sparticus {0} {1} {2})))".format(
 				"(pick_met_match_round {0} {1})"
 				.format(this_team_str, this_met_idx),
