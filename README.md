@@ -1,7 +1,5 @@
 ## Yet another SR match scheduler ##
 
-Usage: schedule ${num-teams} ${num-rounds}
-
 This tools is another attempt to produce a match scheduler for use in the
 [Student Robotics](https://studentrobotics.org) competition. The primary
 novelty is not that it attempts to produce a schedule according to some
@@ -33,8 +31,8 @@ it down somewhere.
 The current list of constraints placed on the schedule:
  * Number of rounds
  * Number of teams (if not a multiple of 4, will probably break excitingly)
- * Teams per match, as a preprocessor define (currently 4)
- * Match seperation distance, preprocessor define (currently 2)
+ * Teams per match, currently 4
+ * Match seperation distance, currently 2
 
 Some goodness criteria that will be added to see if the solver can generate a
 formula that satisfies them are:
