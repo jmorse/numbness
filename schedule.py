@@ -1,9 +1,14 @@
 #!/usr/bin/python
 
+import sys
+
 # More flexible parameters
 NUMROUNDS = 2
 NUMMATCHES = 3
 NUMTEAMS = 12
+
+close_constraints = True
+CLOSENESS = 2
 
 # More built in parameters.
 NUMSLOTS = 4
@@ -48,6 +53,40 @@ for i in range(NUMROUNDS):
 					print_integer(j, MATCHBITS),
 					print_integer(k, SLOTBITS))
 	print "))"
+
+# Optionally add goodness constraints.
+if close_constraints:
+	if CLOSENESS >= NUMMATCHES:
+		print >>sys.stderr, "Match close constraints allows no matches"
+		sys.exit(1)
+
+	# For each round boundry,
+	for r in range(NUMROUNDS-1):
+		print "; Goodness for round boundry {0}".format(r)
+		print "(assert (distinct"
+
+		# Each CLOSENESS+1 matches across the round boundry must have
+		# distinct participants to ensure they always have CLOSENESS
+		# matches between each match of theirs. Each CLOSENESS+1 number
+		# of matches is a span, in which those matches must be distinct.
+		start_match = NUMMATCHES - CLOSENESS
+		for span in range(CLOSENESS):
+			# The range of matches we're interested in is from
+			# `start_match` in the earlier round through to round
+			# `span` in the later round.
+			this_match = (start_match + span) % NUMMATCHES
+			this_round = r
+			if this_match < start_match:
+				this_round = r + 1
+
+			for i in range(NUMSLOTS):
+				print "(sparticus {0} {1} {2})".format(
+					print_integer(this_round, ROUNDBITS),
+					print_integer(this_match, MATCHBITS),
+					print_integer(i, SLOTBITS))
+
+		print "))"
+		print ""
 
 print "(check-sat)"
 
