@@ -25,8 +25,7 @@ be MIT actually, woot.
 
 The schedule is made in a series of rounds; i.e., we have a small set of matches
 in which each team participates once, and the whole schedule is made up of
-a number of rounds. The idea originally came from Rob, he's probably written
-it down somewhere.
+a number of rounds.  The idea originally came from [the MatchMaker scheduler](http://www.idleloop.com/matchmaker/).
 
 The current list of constraints placed on the schedule:
  * Number of rounds
