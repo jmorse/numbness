@@ -150,6 +150,14 @@ if min_met_constraints:
 				"(pick_met_match_slot {0} {1} true)"
 				.format(this_team_str, this_met_idx))
 
+			# Also constrain that the round/match/slot picked must
+			# be in range
+			print "(assert (bvule (pick_met_match_round {0} {1}) {2}))".format(this_team_str, this_met_idx, print_integer(NUMROUNDS, ROUNDBITS))
+			print "(assert (bvule (pick_met_match_match {0} {1}) {2}))".format(this_team_str, this_met_idx, print_integer(NUMMATCHES, MATCHBITS))
+			# FIXME: don't assert anything about slots, only valid
+			# ones are in the domain of (_ BitVec 2)
+			#print "(assert (bvule (pick_met_match_slot {0} {1}) {2}))".format(this_team_str, this_met_idx, print_integer(NUMSLOTS, SLOTBITS))
+
 		# Now constraint that all the other matches are distinct. Plus
 		# distinct from the team we're working on now, just in case the
 		# solver sneakily slips them in there.
