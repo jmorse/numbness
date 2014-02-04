@@ -19,7 +19,7 @@ if USE_Z3:
 else:
 	output_object = QFAUFBV()
 
-output_object = QFBV()
+#output_object = QFBV()
 
 output_object.preamble()
 

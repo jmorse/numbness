@@ -23,5 +23,8 @@ class QFAUFBV:
 	def project(self, x, y, z):
 		return sparticus(x, y, z)
 
+	def read_variable(self, expr):
+		return read_func_var(expr)
+
 	pass
 
