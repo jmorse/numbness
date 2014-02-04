@@ -1,4 +1,5 @@
 from config import *
+import re
 
 class QFBV:
 	def preamble(self):
@@ -17,3 +18,8 @@ class QFBV:
 
 	pass
 
+	def read_variable(self, expr1):
+		string, = expr1
+		regex = "round_([0-9]+)_match_([0-9]+)_slot_([0-9]+)"
+		result = re.match(regex, string)
+		return int(result.group(1)), int(result.group(2)), int(result.group(3))
