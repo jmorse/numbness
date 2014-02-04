@@ -31,11 +31,7 @@ bitvec  = Group(hashchar + bchar + OneOrMore(bit))
 
 # Our expr:
 expr = Forward()
-expr << Group(lparen + symbol + expr + rparen)
-expr << Group(lparen + symbol + expr + expr + rparen)
-expr << Group(lparen + symbol + expr + expr + expr + rparen)
-expr << symbol
-expr << bitvec
+expr << Group((lparen + symbol + expr + rparen) | (lparen + symbol + expr + expr + rparen) | (lparen + symbol + expr + expr + expr + rparen) | symbol | bitvec)
 
 # Pairs of results for the output.
 outpair = Group(lparen + lparen + expr + expr + rparen + rparen + newline)
