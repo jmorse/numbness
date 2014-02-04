@@ -30,6 +30,7 @@ expr = Forward()
 expr << Group(lparen + symbol + expr + rparen)
 expr << Group(lparen + symbol + expr + expr + rparen)
 expr << Group(lparen + symbol + expr + expr + expr + rparen)
+expr << symbol
 
 # Pairs of results for the output.
 outpair = Group(lparen + lparen + expr + expr + rparen + rparen + newline)
