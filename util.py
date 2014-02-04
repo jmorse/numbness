@@ -20,3 +20,14 @@ def read_func_app(expr):
 	# And we can be confident that it has the righ tnumber of vars.
 	lparen, funcname, arg1, arg2, arg3, rparen = expr
 	return read_smt_bvnum(arg1), read_smt_bvnum(arg2), read_smt_bvnum(arg3)
+
+def read_assign(string):
+	if len(string) == 1:
+		string, = string
+		hash, bee, string2 = string
+		if hash == '#' and bee == 'b':
+			return int(string2[2:], 2)
+		else:
+			raise Exception("I don't recognize SMT string {0}".format(string))
+	else:
+		return read_smt_bvnum(string)

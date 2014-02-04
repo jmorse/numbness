@@ -5,6 +5,7 @@ import sys
 from z3 import Z3
 from qfbv import QFBV
 from qfaufbv import QFAUFBV
+from util import *
 
 from pyparsing import nums, oneOf, Word, Literal, Suppress, alphas
 from pyparsing import ParseException, Forward, Group, OneOrMore
@@ -54,5 +55,5 @@ for assignment in foo:
 	# expr1 is the source name, expr2 the actual value.
 	# Do some things
 	round, match, slot = smt_eater.read_variable(expr1)
-	team_no = smt_eater.read_assign(expr2)
+	team_no = read_assign(expr2)
 	output_values[round, match, slot] = team_no
