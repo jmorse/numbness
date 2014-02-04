@@ -26,7 +26,7 @@ def read_assign(string):
 		string, = string
 		hash, bee, string2 = string
 		if hash == '#' and bee == 'b':
-			return int(string2[2:], 2)
+			return int(string2, 2)
 		else:
 			raise Exception("I don't recognize SMT string {0}".format(string))
 	else:
