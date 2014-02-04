@@ -38,6 +38,5 @@ everything = OneOrMore(outpair)
 
 # Read /all the things/
 
-inputblob = sys.stdin.read(1000000)
-foo = everything.parseString(inputblob)
+foo = everything.parseFile(sys.stdin)
 print repr(foo)
