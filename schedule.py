@@ -2,22 +2,10 @@
 
 import sys
 
-# More flexible parameters
-NUMROUNDS = 13
-NUMMATCHES = 8
-NUMTEAMS = 32
-
-close_constraints = True
-CLOSENESS = 5
-
-# More built in parameters.
-NUMSLOTS = 4
-
-# Underlying bitwidths
-ROUNDBITS = 4
-MATCHBITS = 4
-SLOTBITS = 2
-TEAMBITS = 6
+from config import *
+from z3 import Z3
+from qfbv import QFBV
+from qfaufbv import QFAUFBV
 
 # Optionally use more more elaborate Z3 things
 USE_Z3 = False
@@ -33,68 +21,6 @@ def sparticus(r, match, slot):
 
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
-
-class Z3:
-	def preamble(self):
-		print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
-
-		print "(declare-datatypes () ((TEAM "
-		for i in range(NUMTEAMS):
-			print "t{0}".format(i),
-		print ")))"
-
-		# The uninterpreted function that's going to become our
-		# scheduler. Takes a 4 bit round, 4 bit match, 2 bit slot,
-		# returns a team.
-		print ""
-		print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
-		print ""
-
-	def project(self, x, y, z):
-		return sparticus(x, y, z)
-
-	pass
-
-class QFAUFBV:
-	def preamble(self):
-		print "(set-logic QF_AUFBV)"
-
-		print ""
-		print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) (_ BitVec {3}))".format(ROUNDBITS, MATCHBITS, SLOTBITS, TEAMBITS)
-		print ""
-
-		# If not Z3, don't use enum type, and instead we have some
-		# bitvectors with one number identifying one team. Constraint
-		# to the number of teams.
-		for i in range(NUMROUNDS):
-			for j in range(NUMMATCHES):
-				for k in range(NUMSLOTS):
-					print "(assert (bvult ",
-					print self.project(i, j, k),
-					print print_integer(NUMTEAMS, TEAMBITS),
-					print "))"
-
-	def project(self, x, y, z):
-		return sparticus(x, y, z)
-
-	pass
-
-class QFBV:
-	def preamble(self):
-		print "(set-logic QF_BV)"
-
-		print ""
-
-		# Enumerate all the variables, for each match round.
-		for i in range(NUMROUNDS):
-			for j in range(NUMMATCHES):
-				for k in range(NUMSLOTS):
-					print "(declare-fun {0} () (_ BitVec {1}))".format(self.project(i, j, k), TEAMBITS)
-
-	def project(self, x, y, z):
-		return "round_{0}_match_{1}_slot_{2}".format(x, y, z)
-
-	pass
 
 output_object = None
 if USE_Z3:
