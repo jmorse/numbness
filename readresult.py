@@ -2,6 +2,10 @@
 
 import sys
 
+from z3 import Z3
+from qfbv import QFBV
+from qfaufbv import QFAUFBV
+
 from pyparsing import nums, oneOf, Word, Literal, Suppress, alphas
 from pyparsing import ParseException, Forward, Group, OneOrMore
 
@@ -38,9 +42,17 @@ everything = OneOrMore(outpair)
 
 # Read /all the things/
 
+output_values = dict()
+
+# We know it's qfaufbv in testing.
+smt_eater = QFAUFBV()
+
 foo = everything.parseFile(sys.stdin)
 print repr(foo)
 for assignment in foo:
 	paren1, paren2, expr1, expr2, paren3, paren4 = assignment
 	# expr1 is the source name, expr2 the actual value.
 	# Do some things
+	round, match, slot = smt_eater.read_variable(expr1)
+	team_no = smt_eater.read_assign(expr2)
+	output_values[round, match, slot] = team_no
