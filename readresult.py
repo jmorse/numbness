@@ -22,7 +22,6 @@ elif line != "sat":
 
 hashchar = Literal('#')
 bchar = Literal('b')
-newline = Literal('\n')
 lparen = Literal('(')
 rparen = Literal(')')
 symbol = Word(alphas + "_" + "0123456789") # Not the whole smtlib range, but meh
@@ -34,7 +33,7 @@ expr = Forward()
 expr << Group((lparen + symbol + expr + rparen) | (lparen + symbol + expr + expr + rparen) | (lparen + symbol + expr + expr + expr + rparen) | symbol | bitvec)
 
 # Pairs of results for the output.
-outpair = Group(lparen + lparen + expr + expr + rparen + rparen + newline)
+outpair = Group(lparen + lparen + expr + expr + rparen + rparen)
 everything = OneOrMore(outpair)
 
 # Read /all the things/
