@@ -141,4 +141,4 @@ for i in range(NUMROUNDS):
 	for j in range(NUMMATCHES):
 		for k in range(NUMSLOTS):
 			pass
-			print "(get-value (({0})))".format(output_object.project(i, j, k))
+			print "(get-value ({0}))".format(output_object.project(i, j, k))
