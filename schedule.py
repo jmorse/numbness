@@ -37,11 +37,40 @@ print "(set-option :produce-models true)"
 class Z3:
 	def preamble(self):
 		print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
+
+		print "(declare-datatypes () ((TEAM "
+		for i in range(NUMTEAMS):
+			print "t{0}".format(i),
+		print ")))"
+
+		# The uninterpreted function that's going to become our
+		# scheduler. Takes a 4 bit round, 4 bit match, 2 bit slot,
+		# returns a team.
+		print ""
+		print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
+		print ""
+
 	pass
 
 class QFAUFBV:
 	def preamble(self):
 		print "(set-logic QF_AUFBV)"
+
+		print ""
+		print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) (_ BitVec {3}))".format(ROUNDBITS, MATCHBITS, SLOTBITS, TEAMBITS)
+		print ""
+
+		# If not Z3, don't use enum type, and instead we have some
+		# bitvectors with one number identifying one team. Constraint
+		# to the number of teams.
+		for i in range(NUMROUNDS):
+			for j in range(NUMMATCHES):
+				for k in range(NUMSLOTS):
+					print "(assert (bvult ",
+					print sparticus(i, j, k),
+					print print_integer(NUMTEAMS, TEAMBITS),
+					print "))"
+
 	pass
 
 output_object = None
@@ -51,35 +80,6 @@ else:
 	output_object = QFAUFBV()
 
 output_object.preamble()
-
-# Configurable number of enum members
-
-if USE_Z3:
-	print "(declare-datatypes () ((TEAM "
-	for i in range(NUMTEAMS):
-		print "t{0}".format(i),
-	print ")))"
-
-	# The uninterpreted function that's going to become our scheduler.
-	# Takes a 4 bit round, 4 bit match, 2 bit slot, returns a team.
-	print ""
-	print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
-	print ""
-else:
-	print ""
-	print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) (_ BitVec {3}))".format(ROUNDBITS, MATCHBITS, SLOTBITS, TEAMBITS)
-	print ""
-
-	# If not Z3, don't use enum type, and instead we have some bitvectors
-	# with one number identifying one team. Constraint to the number of
-	#teams.
-	for i in range(NUMROUNDS):
-		for j in range(NUMMATCHES):
-			for k in range(NUMSLOTS):
-				print "(assert (bvult ",
-				print sparticus(i, j, k),
-				print print_integer(NUMTEAMS, TEAMBITS),
-				print "))"
 
 # Ensure all slots over all matchs per round are distinct.
 
