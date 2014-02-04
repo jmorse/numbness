@@ -20,10 +20,14 @@ elif line != "sat":
 
 # Build a pyparsing thing.
 
+hashchar = Literal('#')
+bchar = Literal('b')
 newline = Literal('\n')
 lparen = Literal('(')
 rparen = Literal(')')
 symbol = Word(alphas + "_" + "0123456789") # Not the whole smtlib range, but meh
+bit = Word("01")
+bitvec  = Group(hashchar + bchar + OneOrMore(bit))
 
 # Our expr:
 expr = Forward()
@@ -31,6 +35,7 @@ expr << Group(lparen + symbol + expr + rparen)
 expr << Group(lparen + symbol + expr + expr + rparen)
 expr << Group(lparen + symbol + expr + expr + expr + rparen)
 expr << symbol
+expr << bitvec
 
 # Pairs of results for the output.
 outpair = Group(lparen + lparen + expr + expr + rparen + rparen + newline)
