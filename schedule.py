@@ -39,6 +39,12 @@ else:
 	print "(set-logic QF_AUFBV)"
 print ""
 
+class Z3:
+	pass
+
+class QFAUFBV:
+	pass
+
 # Configurable number of enum members
 
 if USE_Z3:
