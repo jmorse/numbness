@@ -33,17 +33,24 @@ def sparticus(r, match, slot):
 
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
-if USE_Z3:
-	print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
-else:
-	print "(set-logic QF_AUFBV)"
-print ""
 
 class Z3:
+	def preamble(self):
+		print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
 	pass
 
 class QFAUFBV:
+	def preamble(self):
+		print "(set-logic QF_AUFBV)"
 	pass
+
+output_object = None
+if USE_Z3:
+	output_object = Z3()
+else:
+	output_object = QFAUFBV()
+
+output_object.preamble()
 
 # Configurable number of enum members
 
