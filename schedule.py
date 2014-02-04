@@ -141,7 +141,4 @@ for i in range(NUMROUNDS):
 	for j in range(NUMMATCHES):
 		for k in range(NUMSLOTS):
 			pass
-			print "(get-value ((sparticus {0} {1} {2})))".format(
-					print_integer(i, ROUNDBITS),
-					print_integer(j, MATCHBITS),
-					print_integer(k, SLOTBITS))
+			print "(get-value (({0})))".format(output_object.project(i, j, k))
