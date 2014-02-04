@@ -14,7 +14,7 @@ def read_smt_bvnum(num):
 	bvnum = bvnum[2:]
 	return int(bvnum)
 
-def read_func_var(expr):
+def read_func_app(expr):
 	# Function application looks like this:
 	# (sparticus (_ bv0 4) (_ bv0 4) (_ bv0 2))
 	# And we can be confident that it has the righ tnumber of vars.
