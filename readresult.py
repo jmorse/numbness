@@ -49,7 +49,6 @@ output_values = dict()
 smt_eater = QFAUFBV()
 
 foo = everything.parseFile(sys.stdin)
-print repr(foo)
 for assignment in foo:
 	paren1, paren2, expr1, expr2, paren3, paren4 = assignment
 	# expr1 is the source name, expr2 the actual value.
@@ -57,3 +56,11 @@ for assignment in foo:
 	round, match, slot = smt_eater.read_variable(expr1)
 	team_no = read_assign(expr2)
 	output_values[round, match, slot] = team_no
+
+# Print all the things.
+for i in range(NUMROUNDS):
+	for j in range(NUMMATCHES):
+		something = []
+		for k in range(NUMSLOTS):
+			something.append(output_values[i, j, k])
+		print "{0}|{1}|{2}|{3}".format(something[0], something[1], something[2], something[3])
