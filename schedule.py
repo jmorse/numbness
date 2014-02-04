@@ -70,7 +70,7 @@ class QFAUFBV:
 			for j in range(NUMMATCHES):
 				for k in range(NUMSLOTS):
 					print "(assert (bvult ",
-					print sparticus(i, j, k),
+					print self.project(i, j, k),
 					print print_integer(NUMTEAMS, TEAMBITS),
 					print "))"
 
