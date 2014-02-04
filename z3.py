@@ -1,4 +1,5 @@
 from config import *
+from util import *
 
 class Z3:
 	def preamble(self):
