@@ -50,6 +50,9 @@ class Z3:
 		print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
 		print ""
 
+	def project(self, x, y, z):
+		return sparticus(x, y, z)
+
 	pass
 
 class QFAUFBV:
@@ -71,6 +74,9 @@ class QFAUFBV:
 					print print_integer(NUMTEAMS, TEAMBITS),
 					print "))"
 
+	def project(self, x, y, z):
+		return sparticus(x, y, z)
+
 	pass
 
 output_object = None
@@ -88,7 +94,7 @@ for i in range(NUMROUNDS):
 	print "(assert (distinct "
 	for j in range(NUMMATCHES):
 		for k in range(NUMSLOTS):
-			print sparticus(i, j, k)
+			print output_object.project(i, j, k)
 	print "))"
 
 # Optionally add goodness constraints.
@@ -119,7 +125,7 @@ if close_constraints:
 					this_round = r + 1
 
 				for i in range(NUMSLOTS):
-					print sparticus(this_round,this_match,i)
+					print output_object.project(this_round,this_match,i)
 
 			print "))"
 		print ""
