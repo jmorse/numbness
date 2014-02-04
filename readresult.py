@@ -40,3 +40,7 @@ everything = OneOrMore(outpair)
 
 foo = everything.parseFile(sys.stdin)
 print repr(foo)
+for assignment in foo:
+	paren1, paren2, expr1, expr2, paren3, paren4 = assignment
+	# expr1 is the source name, expr2 the actual value.
+	# Do some things
