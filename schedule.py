@@ -9,12 +9,27 @@ from qfbv import QFBV
 from qfaufbv import QFAUFBV
 
 args = argparse.ArgumentParser(description="Produce an SMT forumla representing a schedule for teams competing in SR")
+
 form = args.add_mutually_exclusive_group()
 form.add_argument("--z3", action="store_true", default=False, dest="z3", help="Produce a formula using Z3 enumerations")
 form.add_argument("--qfbv", action="store_true", default=False, dest="qfbv", help="Produce a formula with enumerated bitvector variables")
 form.add_argument("--qfaufbv", action="store_true", default=False, dest="qfaufbv", help="Produce a formula using an uninterpreted function")
 
+args.add_argument("--rounds", type=int, help="Number of rounds", default=0)
+args.add_argument("--teams", type=int, help="Number of teams", default=0)
+args.add_argument("--closeness", type=int, help="Closeness constraint", default=0)
+
 the_args = args.parse_args()
+
+if the_args.rounds != 0:
+    NUMROUNDS = the_args.rounds
+if the_args.teams != 0:
+    NUMTEAMS = the_args.teams
+if the_args.closeness != 0:
+    CLOSENESS = the_args.closeness
+
+compute_bitwidths()
+validate_config()
 
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
