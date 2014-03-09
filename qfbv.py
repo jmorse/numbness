@@ -1,5 +1,6 @@
 import config
 import re
+from util import *
 
 class QFBV:
     def preamble(self):
@@ -12,6 +13,16 @@ class QFBV:
             for j in range(config.NUMMATCHES):
                 for k in range(config.NUMSLOTS):
                     print "(declare-fun {0} () (_ BitVec {1}))".format(self.project(i, j, k), config.TEAMBITS)
+
+        # Do we need to add additional assertions...
+        if pow(2, config.TEAMBITS) == config.NUMTEAMS:
+            return
+
+        # And assert that they're in range
+        for i in range(config.NUMROUNDS):
+            for j in range(config.NUMMATCHES):
+                for k in range(config.NUMSLOTS):
+                    print "(assert (bvult {0} {1}))".format(self.project(i, j, k), print_integer(config.NUMTEAMS, config.TEAMBITS))
 
     def project(self, x, y, z):
         return "round_{0}_match_{1}_slot_{2}".format(x, y, z)
