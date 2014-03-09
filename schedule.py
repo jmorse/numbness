@@ -32,25 +32,25 @@ print "(set-option :produce-models true)"
 
 output_object = None
 if the_args.z3:
-	output_object = Z3()
+    output_object = Z3()
 elif the_args.qfaufbv:
-	output_object = QFAUFBV()
+    output_object = QFAUFBV()
 elif the_args.qfbv:
-	output_object = QFBV()
+    output_object = QFBV()
 else:
-	output_object = QFBV()
+    output_object = QFBV()
 
 output_object.preamble()
 
 # Ensure all slots over all matchs per round are distinct.
 
 for i in range(config.NUMROUNDS):
-	print "; round {0}".format(i)
-	print "(assert (distinct "
-	for j in range(config.NUMMATCHES):
-		for k in range(config.NUMSLOTS):
-			print output_object.project(i, j, k)
-	print "))"
+    print "; round {0}".format(i)
+    print "(assert (distinct "
+    for j in range(config.NUMMATCHES):
+        for k in range(config.NUMSLOTS):
+            print output_object.project(i, j, k)
+    print "))"
 
 # For each round boundry,
 for r in range(config.NUMROUNDS-1):
@@ -87,7 +87,7 @@ print "(check-sat)"
 
 print ""
 for i in range(config.NUMROUNDS):
-	for j in range(config.NUMMATCHES):
-		for k in range(config.NUMSLOTS):
-			pass
-			print "(get-value ({0}))".format(output_object.project(i, j, k))
+    for j in range(config.NUMMATCHES):
+        for k in range(config.NUMSLOTS):
+            pass
+            print "(get-value ({0}))".format(output_object.project(i, j, k))
