@@ -1,17 +1,6 @@
 import sys
 from math import log, ceil
 
-NUMROUNDS = 13
-NUMTEAMS = 32
-CLOSENESS = 5
-NUMSLOTS = 4
-
-NUMMATCHES = 0
-ROUNDBITS = 0
-MATCHBITS = 0
-SLOTBITS = 0
-TEAMBITS = 0
-
 def set_config(rounds, teams, closeness):
     global NUMROUNDS, NUMTEAMS, CLOSENESS, NUMSLOTS
     print rounds
@@ -27,10 +16,7 @@ def set_config(rounds, teams, closeness):
 def compute_bitwidths():
     global NUMROUNDS, NUMTEAMS, CLOSENESS, NUMSLOTS
     global NUMMATCHES, ROUNDBITS, MATCHBITS, SLOTBITS, TEAMBITS
-    print "fgasdf"
-    print NUMMATCHES
     NUMMATCHES = NUMTEAMS / NUMSLOTS
-    print NUMMATCHES
 
     # Underlying bitwidths, computed from other parameters
     ROUNDBITS = int(ceil(log(NUMROUNDS, 2)))

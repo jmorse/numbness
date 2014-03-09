@@ -1,4 +1,4 @@
-from config import *
+import config
 from util import *
 
 class Z3:
@@ -6,7 +6,7 @@ class Z3:
 		print "; Logic is now \"Whatever Z3 accepts\" (set-logic AUFBV)"
 
 		print "(declare-datatypes () ((TEAM "
-		for i in range(NUMTEAMS):
+		for i in range(config.NUMTEAMS):
 			print "t{0}".format(i),
 		print ")))"
 
@@ -14,7 +14,7 @@ class Z3:
 		# scheduler. Takes a 4 bit round, 4 bit match, 2 bit slot,
 		# returns a team.
 		print ""
-		print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(ROUNDBITS, MATCHBITS, SLOTBITS)
+		print "(declare-fun sparticus ((_ BitVec {0}) (_ BitVec {1}) (_ BitVec {2})) TEAM)".format(config.ROUNDBITS, config.MATCHBITS, config.SLOTBITS)
 		print ""
 
 	def project(self, x, y, z):
