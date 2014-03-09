@@ -3,7 +3,8 @@
 import sys
 import argparse
 
-from config import *
+import config
+from config import set_config, compute_bitwidths, validate_config
 from z3 import Z3
 from qfbv import QFBV
 from qfaufbv import QFAUFBV
@@ -15,21 +16,16 @@ form.add_argument("--z3", action="store_true", default=False, dest="z3", help="P
 form.add_argument("--qfbv", action="store_true", default=False, dest="qfbv", help="Produce a formula with enumerated bitvector variables")
 form.add_argument("--qfaufbv", action="store_true", default=False, dest="qfaufbv", help="Produce a formula using an uninterpreted function")
 
-args.add_argument("--rounds", type=int, help="Number of rounds", default=0)
-args.add_argument("--teams", type=int, help="Number of teams", default=0)
-args.add_argument("--closeness", type=int, help="Closeness constraint", default=0)
+args.add_argument("--rounds", type=int, help="Number of rounds", default=13)
+args.add_argument("--teams", type=int, help="Number of teams", default=32)
+args.add_argument("--closeness", type=int, help="Closeness constraint", default=5)
 
 the_args = args.parse_args()
 
-if the_args.rounds != 0:
-    NUMROUNDS = the_args.rounds
-if the_args.teams != 0:
-    NUMTEAMS = the_args.teams
-if the_args.closeness != 0:
-    CLOSENESS = the_args.closeness
-
+set_config(the_args.rounds, the_args.teams, the_args.closeness)
 compute_bitwidths()
 validate_config()
+
 
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
@@ -48,36 +44,36 @@ output_object.preamble()
 
 # Ensure all slots over all matchs per round are distinct.
 
-for i in range(NUMROUNDS):
+for i in range(config.NUMROUNDS):
 	print "; round {0}".format(i)
 	print "(assert (distinct "
-	for j in range(NUMMATCHES):
-		for k in range(NUMSLOTS):
+	for j in range(config.NUMMATCHES):
+		for k in range(config.NUMSLOTS):
 			print output_object.project(i, j, k)
 	print "))"
 
 # For each round boundry,
-for r in range(NUMROUNDS-1):
+for r in range(config.NUMROUNDS-1):
     print "; Goodness for round boundry {0}".format(r)
 
     # Each CLOSENESS+1 matches across the round boundry must have
     # distinct participants to ensure they always have CLOSENESS
     # matches between each match of theirs. Each CLOSENESS+1 number
     # of matches is a span, in which those matches must be distinct.
-    for span in range(CLOSENESS):
-        start_match = NUMMATCHES - CLOSENESS + span
+    for span in range(config.CLOSENESS):
+        start_match = config.NUMMATCHES - config.CLOSENESS + span
         print "; Span goodness {0}".format(span)
         print "(assert (distinct"
-        for offs in range(CLOSENESS + 1):
+        for offs in range(config.CLOSENESS + 1):
             # The range of matches we're interested in is
             # from `start_match` in the earlier round
             # through to round `span` in the later round.
-            this_match = (start_match + offs) % NUMMATCHES
+            this_match = (start_match + offs) % config.NUMMATCHES
             this_round = r
             if this_match < start_match:
                 this_round = r + 1
 
-            for i in range(NUMSLOTS):
+            for i in range(config.NUMSLOTS):
                 print output_object.project(this_round,this_match,i)
 
         print "))"
@@ -90,8 +86,8 @@ print "(check-sat)"
 # Also, fetch the outcome from each point.
 
 print ""
-for i in range(NUMROUNDS):
-	for j in range(NUMMATCHES):
-		for k in range(NUMSLOTS):
+for i in range(config.NUMROUNDS):
+	for j in range(config.NUMMATCHES):
+		for k in range(config.NUMSLOTS):
 			pass
 			print "(get-value ({0}))".format(output_object.project(i, j, k))
