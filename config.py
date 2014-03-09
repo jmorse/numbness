@@ -21,10 +21,13 @@ TEAMBITS = int(ceil(log(NUMTEAMS, 2)))    # ...
 
 # Validation
 
-if (NUMTEAMS % NUMSLOTS) != 0:
-    print >>sys.stderr, "Number of teams does not divide by number of matches"
-    sys.exit(1)
+def validate_config():
+    if (NUMTEAMS % NUMSLOTS) != 0:
+        print >>sys.stderr, "Num of teams does not divide by number of matches"
+        sys.exit(1)
 
-if CLOSENESS >= NUMMATCHES:
-    print >>sys.stderr, "Match close constraints allows no matches"
-    sys.exit(1)
+    if CLOSENESS >= NUMMATCHES:
+        print >>sys.stderr, "Match close constraints allows no matches"
+        sys.exit(1)
+
+validate_config()
