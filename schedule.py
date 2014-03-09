@@ -41,10 +41,6 @@ for i in range(NUMROUNDS):
 			print output_object.project(i, j, k)
 	print "))"
 
-if CLOSENESS >= NUMMATCHES:
-    print >>sys.stderr, "Match close constraints allows no matches"
-    sys.exit(1)
-
 # For each round boundry,
 for r in range(NUMROUNDS-1):
     print "; Goodness for round boundry {0}".format(r)
