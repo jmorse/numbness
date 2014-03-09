@@ -3,7 +3,6 @@ from math import log, ceil
 
 def set_config(rounds, teams, closeness):
     global NUMROUNDS, NUMTEAMS, CLOSENESS, NUMSLOTS
-    print rounds
     NUMROUNDS = rounds     # How many rounds to schedule in the competition
     NUMTEAMS = teams       # The number of teams taking part
     CLOSENESS = closeness  # Minimum number of matches between each teams
