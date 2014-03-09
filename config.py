@@ -4,7 +4,6 @@ import sys
 NUMROUNDS = 13                  # How many rounds to schedule in the competition
 NUMTEAMS = 32
 
-close_constraints = True
 CLOSENESS = 5
 
 # More built in parameters.

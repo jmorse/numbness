@@ -41,38 +41,36 @@ for i in range(NUMROUNDS):
 			print output_object.project(i, j, k)
 	print "))"
 
-# Optionally add goodness constraints.
-if close_constraints:
-	if CLOSENESS >= NUMMATCHES:
-		print >>sys.stderr, "Match close constraints allows no matches"
-		sys.exit(1)
+if CLOSENESS >= NUMMATCHES:
+    print >>sys.stderr, "Match close constraints allows no matches"
+    sys.exit(1)
 
-	# For each round boundry,
-	for r in range(NUMROUNDS-1):
-		print "; Goodness for round boundry {0}".format(r)
+# For each round boundry,
+for r in range(NUMROUNDS-1):
+    print "; Goodness for round boundry {0}".format(r)
 
-		# Each CLOSENESS+1 matches across the round boundry must have
-		# distinct participants to ensure they always have CLOSENESS
-		# matches between each match of theirs. Each CLOSENESS+1 number
-		# of matches is a span, in which those matches must be distinct.
-		for span in range(CLOSENESS):
-			start_match = NUMMATCHES - CLOSENESS + span
-			print "; Span goodness {0}".format(span)
-			print "(assert (distinct"
-			for offs in range(CLOSENESS + 1):
-				# The range of matches we're interested in is
-				# from `start_match` in the earlier round
-				# through to round `span` in the later round.
-				this_match = (start_match + offs) % NUMMATCHES
-				this_round = r
-				if this_match < start_match:
-					this_round = r + 1
+    # Each CLOSENESS+1 matches across the round boundry must have
+    # distinct participants to ensure they always have CLOSENESS
+    # matches between each match of theirs. Each CLOSENESS+1 number
+    # of matches is a span, in which those matches must be distinct.
+    for span in range(CLOSENESS):
+        start_match = NUMMATCHES - CLOSENESS + span
+        print "; Span goodness {0}".format(span)
+        print "(assert (distinct"
+        for offs in range(CLOSENESS + 1):
+            # The range of matches we're interested in is
+            # from `start_match` in the earlier round
+            # through to round `span` in the later round.
+            this_match = (start_match + offs) % NUMMATCHES
+            this_round = r
+            if this_match < start_match:
+                this_round = r + 1
 
-				for i in range(NUMSLOTS):
-					print output_object.project(this_round,this_match,i)
+            for i in range(NUMSLOTS):
+                print output_object.project(this_round,this_match,i)
 
-			print "))"
-		print ""
+        print "))"
+    print ""
 
 # Instruct solver to check satisfiability at this point
 
