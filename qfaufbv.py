@@ -1,5 +1,6 @@
 import config
 from util import *
+from math import pow
 
 class QFAUFBV:
 	def preamble(self):
@@ -12,6 +13,11 @@ class QFAUFBV:
 		# If not Z3, don't use enum type, and instead we have some
 		# bitvectors with one number identifying one team. Constraint
 		# to the number of teams.
+
+		# Skip if the number of teams fits exactly in the bitwidth.
+		if pow(2, config.TEAMBITS) == config.NUMTEAMS:
+			return
+
 		for i in range(config.NUMROUNDS):
 			for j in range(config.NUMMATCHES):
 				for k in range(config.NUMSLOTS):
