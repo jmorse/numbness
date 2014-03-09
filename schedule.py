@@ -1,25 +1,33 @@
 #!/usr/bin/python
 
 import sys
+import argparse
 
 from config import *
 from z3 import Z3
 from qfbv import QFBV
 from qfaufbv import QFAUFBV
 
-# Optionally use more more elaborate Z3 things
-USE_Z3 = False
+args = argparse.ArgumentParser(description="Produce an SMT forumla representing a schedule for teams competing in SR")
+form = args.add_mutually_exclusive_group()
+form.add_argument("--z3", action="store_true", default=False, dest="z3", help="Produce a formula using Z3 enumerations")
+form.add_argument("--qfbv", action="store_true", default=False, dest="qfbv", help="Produce a formula with enumerated bitvector variables")
+form.add_argument("--qfaufbv", action="store_true", default=False, dest="qfaufbv", help="Produce a formula using an uninterpreted function")
+
+the_args = args.parse_args()
 
 print "(set-info :status unknown)"
 print "(set-option :produce-models true)"
 
 output_object = None
-if USE_Z3:
+if the_args.z3:
 	output_object = Z3()
-else:
+elif the_args.qfaufbv:
 	output_object = QFAUFBV()
-
-#output_object = QFBV()
+elif the_args.qfbv:
+	output_object = QFBV()
+else:
+	output_object = QFBV()
 
 output_object.preamble()
 
