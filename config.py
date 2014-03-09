@@ -2,9 +2,9 @@ import sys
 
 # More flexible parameters
 NUMROUNDS = 13                  # How many rounds to schedule in the competition
-NUMTEAMS = 32
-
-CLOSENESS = 5
+NUMTEAMS = 32                   # The number of teams taking part
+CLOSENESS = 5                   # Minimum number of matches between each teams
+                                # appearance.
 
 # More built in parameters.
 NUMSLOTS = 4
