@@ -1,16 +1,14 @@
 import sys
 from math import log, ceil
 
-def set_config(rounds, teams, closeness):
+def set_config(rounds, teams, closeness, slots):
     global NUMROUNDS, NUMTEAMS, CLOSENESS, NUMSLOTS
     NUMROUNDS = rounds     # How many rounds to schedule in the competition
     NUMTEAMS = teams       # The number of teams taking part
     CLOSENESS = closeness  # Minimum number of matches between each teams
                            # appearance.
 
-    NUMSLOTS = 4           # Everything will break if this changes.
-                           # That's fine, because SR doesn't use any
-                           # other  match format for the moment.
+    NUMSLOTS = slots       # Number of slots per match
 
 def compute_bitwidths():
     global NUMROUNDS, NUMTEAMS, CLOSENESS, NUMSLOTS
@@ -33,4 +31,8 @@ def validate_config():
 
     if CLOSENESS >= NUMMATCHES:
         print >>sys.stderr, "Match close constraints allows no matches"
+        sys.exit(1)
+
+    if (NUMSLOTS % 4) != 0:
+        print >>sys.stderr, "Number of slots is not a multiple of four. The world will end."
         sys.exit(1)

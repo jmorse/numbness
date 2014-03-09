@@ -19,10 +19,11 @@ form.add_argument("--qfaufbv", action="store_true", default=False, dest="qfaufbv
 args.add_argument("--rounds", type=int, help="Number of rounds", default=13)
 args.add_argument("--teams", type=int, help="Number of teams", default=32)
 args.add_argument("--closeness", type=int, help="Closeness constraint", default=5)
+args.add_argument("--slots", type=int, help="Slots per match", default=4)
 
 the_args = args.parse_args()
 
-set_config(the_args.rounds, the_args.teams, the_args.closeness)
+set_config(the_args.rounds, the_args.teams, the_args.closeness, the_args.slots)
 compute_bitwidths()
 validate_config()
 
