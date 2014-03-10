@@ -30,8 +30,8 @@ a number of rounds.  The idea originally came from [the MatchMaker scheduler](ht
 The current list of constraints placed on the schedule:
  * Number of rounds
  * Number of teams (if not a multiple of 4, will probably break excitingly)
- * Teams per match, currently 4
- * Match seperation distance, currently 2
+ * Teams per match
+ * Match seperation distance (i.e., the minimum gap between matches
 
 Some goodness criteria that will be added to see if the solver can generate a
 formula that satisfies them are:
@@ -44,3 +44,22 @@ requires the bitwidths of the underlying formula to be changed too; some other
 factors such as there being four teams per match, and always a multiple of
 four number of teams, are built in at a more fundemental level. Hang around
 and these things will be slowly massaged out.
+
+## Usage ##
+
+There are two sets of options that schedule.py will take, covering the constraints placed on the schedule being searched for, and the syntax it's printed in. By default, a schedule for 13 rounds of 4 teams per match, with 32 teams will be printed in the QFBV format. The options are:
+
+ * --rounds N, where N is the number of rounds to schedule
+ * --teams N, where N is the number of teams taking part
+ * --slots N, where N is the number of teams that can take part in a particular match
+ * --closeness X, where X is the minimum number of matches between each teams appearance in the next match
+
+While for syntax:
+
+ * --z3 will produce a formula using Z3 enumerations for identifying teams
+ * --qfbv will produce a formula using only bitvector variables
+ * --qfaufbv will produce a formula using an uninterpreted function
+
+## Parsing the output ##
+
+At the end of each solver script there are a series of 'get-value' commands, that cause the solver to print out the contents of the schedule it's generated. To convert this to the format the rest of the SR tools expect (pipe separated team names/numbers), the 'readresult.py' script exists. Invoke it with the same options as schedule.py, then pipe the output of the SMT solver into it. It'll then print the schedule in the corresponding SR format.
