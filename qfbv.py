@@ -45,7 +45,6 @@ class QFBV:
         print "))"
 
 
-
         for i in range(config.NUMROUNDS):
             for j in range(config.NUMMATCHES):
                 # Uuuugh
@@ -57,8 +56,6 @@ class QFBV:
 
     def project(self, x, y, z):
         return "round_{0}_match_{1}_slot_{2}".format(x, y, z)
-
-    pass
 
     def read_variable(self, expr1):
         string, = expr1
