@@ -80,6 +80,19 @@ for r in range(config.NUMROUNDS-1):
         print "))"
     print ""
 
+# Emit array updates representing the number of times a particular match
+# pairing has occurred.
+cur_array_sym = "initial_array"
+for i in range(config.NUMROUNDS):
+    for j in range(config.NUMMATCHES):
+        # Uuuugh
+        games = config.NUMSLOTS / 4
+        pairings_per_game = 6
+        for k in range(games):
+            for l in range(pairings_per_game):
+                pass
+
+
 # Instruct solver to check satisfiability at this point
 
 print "(check-sat)"
