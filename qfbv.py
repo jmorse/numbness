@@ -24,6 +24,8 @@ class QFBV:
                 for k in range(config.NUMSLOTS):
                     print "(assert (bvult {0} {1}))".format(self.project(i, j, k), print_integer(config.NUMTEAMS, config.TEAMBITS))
 
+        print "(declare-fun faced_array () (Array (_ BitVec {0}) (_ BitVec {0})))".format(config.TEAMBITS*2, config.MATCHBITS)
+
     def project(self, x, y, z):
         return "round_{0}_match_{1}_slot_{2}".format(x, y, z)
 
