@@ -80,6 +80,48 @@ for r in range(config.NUMROUNDS-1):
         print "))"
     print ""
 
+# Munge a transition
+
+def distinct_face_for_trans(x, y):
+    # Yay quadratic!
+    games = config.NUMSLOTS / 4
+    for i in (config.NUMTEAMS):
+        for j in (config.NUMTEAMS):
+            matchx = i / config.NUMSLOTS
+            matchx_slot = i % config.NUMSLOTS
+            matchx_game = (i / 4) % games
+            matchx_pos = i % 4
+            matchy = j / config.NUMSLOTS
+            matchy_slot = j % config.NUMSLOTS
+            matchy_game = (j / 4) % games
+            matchy_pos = j % 4
+
+            # Project the two vars we're interested in
+            matchx_name = output_object.project(x, matchx, matchx_slot)
+            matchy_name = output_object.project(y, matchy, matchy_slot)
+
+            # Project out all the names in the games
+            matchx_slot_names = []
+            matchx_slot_names.append(output_object.project(x, matchx, (matchx_game * 4)))
+            matchx_slot_names.append(output_object.project(x, matchx, (matchx_game * 4) + 1))
+            matchx_slot_names.append(output_object.project(x, matchx, (matchx_game * 4) + 2))
+            matchx_slot_names.append(output_object.project(x, matchx, (matchx_game * 4) + 3))
+
+            matchy_slot_names = []
+            matchy_slot_names.append(output_object.project(y, matchy, (matchy_game * 4)))
+            matchy_slot_names.append(output_object.project(y, matchy, (matchy_game * 4) + 1))
+            matchy_slot_names.append(output_object.project(y, matchy, (matchy_game * 4) + 2))
+            matchy_slot_names.append(output_object.project(y, matchy, (matchy_game * 4) + 3))
+
+            matchx_slot_names -= matchx_name
+            matchy_slot_names -= matchy_name
+
+            # And now the constraint: if the two matches match, the rest of the
+            # competitors must be distinct.
+            print "(assert (=> (= {0} {1}) (distinct {2} {3} {4} {5} {6} {7})))".format(matchx_name, matchy_name, matchx_slot_names[0], matchx_slot_names[1], matchx_slot_names[2], matchy_slot_names[0], matchy_slot_names[1], matchy_slot_names[2])
+
+
+
 # Instruct solver to check satisfiability at this point
 
 print "(check-sat)"
