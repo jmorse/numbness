@@ -85,8 +85,8 @@ for r in range(config.NUMROUNDS-1):
 def distinct_face_for_trans(x, y):
     # Yay quadratic!
     games = config.NUMSLOTS / 4
-    for i in (config.NUMTEAMS):
-        for j in (config.NUMTEAMS):
+    for i in range(config.NUMTEAMS):
+        for j in range(config.NUMTEAMS):
             matchx = i / config.NUMSLOTS
             matchx_slot = i % config.NUMSLOTS
             matchx_game = (i / 4) % games
@@ -113,14 +113,19 @@ def distinct_face_for_trans(x, y):
             matchy_slot_names.append(output_object.project(y, matchy, (matchy_game * 4) + 2))
             matchy_slot_names.append(output_object.project(y, matchy, (matchy_game * 4) + 3))
 
-            matchx_slot_names -= matchx_name
-            matchy_slot_names -= matchy_name
+            matchx_slot_names.remove(matchx_name)
+            matchy_slot_names.remove(matchy_name)
 
             # And now the constraint: if the two matches match, the rest of the
             # competitors must be distinct.
             print "(assert (=> (= {0} {1}) (distinct {2} {3} {4} {5} {6} {7})))".format(matchx_name, matchy_name, matchx_slot_names[0], matchx_slot_names[1], matchx_slot_names[2], matchy_slot_names[0], matchy_slot_names[1], matchy_slot_names[2])
 
 
+for i in range(config.NUMROUNDS):
+    if i == 0:
+        continue
+
+    distinct_face_for_trans(i - 1, i)
 
 # Instruct solver to check satisfiability at this point
 
