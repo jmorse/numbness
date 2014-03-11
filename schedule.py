@@ -83,6 +83,10 @@ for r in range(config.NUMROUNDS-1):
 # Emit array updates representing the number of times a particular match
 # pairing has occurred.
 cur_array_sym = "initial_array"
+
+# List of each pairing slot
+pairings = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]
+
 for i in range(config.NUMROUNDS):
     for j in range(config.NUMMATCHES):
         # Uuuugh
@@ -90,7 +94,30 @@ for i in range(config.NUMROUNDS):
         pairings_per_game = 6
         for k in range(games):
             for l in range(pairings_per_game):
-                pass
+                # We need to: calculate the pairing, select out the current
+                # value, add one, and store.
+                slot1 = pairings[l][0]
+                slot2 = pairings[l][1]
+
+                # Adjust for there being multiple games in a match. I hate my
+                # life and ever piece of code I've ever written.
+                slot1 += k * 4
+                slot2 += k * 4
+
+                slot1_name = output_object.project(i, j, slot1)
+                slot2_name = output_object.project(i, j, slot2)
+                pairing = "(concat {0} {1})".format(slot1_name, slot2_name)
+
+                # That's the pairing produced. Now select the current value.
+                oldval = "(select {0} {1})".format(cur_array_sym, pairing)
+
+                # And store
+                thestore = "(store {0} {1} (bvadd {2} (_ bv1 {3})))".format(cur_array_sym, pairing, oldval, config.NUMMATCHES)
+
+                # And assert
+                newname = output_object.faced_name(i, j, k, l)
+                print "(assert (= {0} {1}))".format(newname, thestore)
+                cur_array_sym = newname
 
 
 # Instruct solver to check satisfiability at this point
