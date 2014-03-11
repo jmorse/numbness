@@ -26,9 +26,9 @@ class QFBV:
 
         array_domain_w = config.TEAMBITS*2
 
-        print "(declare-fun initial_free_array () (Array (_ BitVec {0}) (_ BitVec {1})))".format(config.TEAMBITS*2, config.MATCHBITS)
+        print "(declare-fun initial_free_array () (Array (_ BitVec {0}) (_ BitVec {1})))".format(config.TEAMBITS*2, config.ROUNDBITS)
 
-        print "(declare-fun initial_array () (Array (_ BitVec {0}) (_ BitVec {1})))".format(config.TEAMBITS*2, config.MATCHBITS)
+        print "(declare-fun initial_array () (Array (_ BitVec {0}) (_ BitVec {1})))".format(config.TEAMBITS*2, config.ROUNDBITS)
 
         # Alas, we have to zero-initialize the initial array.
         print "(assert (= initial_array "
@@ -40,7 +40,7 @@ class QFBV:
 
         for i in range(config.NUMTEAMS):
             for j in range(config.NUMTEAMS):
-                print "(_ bv{0} {1}) (_ bv0 {2}) )".format(((i << config.TEAMBITS) + j), array_domain_w, config.MATCHBITS)
+                print "(_ bv{0} {1}) (_ bv0 {2}) )".format(((i << config.TEAMBITS) + j), array_domain_w, config.ROUNDBITS)
 
         print "))"
 
@@ -52,10 +52,10 @@ class QFBV:
                 pairings_per_game = 6
                 for k in range(games):
                     for l in range(pairings_per_game):
-                        print "(declare-fun {0} () (Array (_ BitVec {1}) (_ BitVec {2})))".format(self.faced_name(i, j, k, l), config.TEAMBITS*2, config.MATCHBITS)
+                        print "(declare-fun {0} () (Array (_ BitVec {1}) (_ BitVec {2})))".format(self.faced_name(i, j, k, l), config.TEAMBITS*2, config.ROUNDBITS)
 
     def faced_name(self, i, j , k, l):
-        return "faced_array_r{0}_m{1}_g{2}_p{3}".format(i, j, k, l, config.TEAMBITS*2, config.MATCHBITS)
+        return "faced_array_r{0}_m{1}_g{2}_p{3}".format(i, j, k, l)
 
     def project(self, x, y, z):
         return "round_{0}_match_{1}_slot_{2}".format(x, y, z)

@@ -112,7 +112,7 @@ for i in range(config.NUMROUNDS):
                 oldval = "(select {0} {1})".format(cur_array_sym, pairing)
 
                 # And store
-                thestore = "(store {0} {1} (bvadd {2} (_ bv1 {3})))".format(cur_array_sym, pairing, oldval, config.NUMMATCHES)
+                thestore = "(store {0} {1} (bvadd {2} (_ bv1 {3})))".format(cur_array_sym, pairing, oldval, config.ROUNDBITS)
 
                 # And assert
                 newname = output_object.faced_name(i, j, k, l)
