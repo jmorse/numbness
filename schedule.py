@@ -119,6 +119,11 @@ for i in range(config.NUMROUNDS):
                 print "(assert (= {0} {1}))".format(newname, thestore)
                 cur_array_sym = newname
 
+# Finally, assert that no pairing exceeds some number, five for the moment.
+# We can do this through having some free variables for the moment.
+
+print "(declare-fun free_faced_checker_idx () (_ BitVec {0}))".format(config.TEAMBITS*2)
+print "(assert (bvult (select {0} free_faced_checker_idx) (_ bv4 {1})))".format(cur_array_sym, config.ROUNDBITS)
 
 # Instruct solver to check satisfiability at this point
 
