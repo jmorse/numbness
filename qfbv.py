@@ -24,7 +24,28 @@ class QFBV:
                 for k in range(config.NUMSLOTS):
                     print "(assert (bvult {0} {1}))".format(self.project(i, j, k), print_integer(config.NUMTEAMS, config.TEAMBITS))
 
+        array_domain_w = config.TEAMBITS*2
+
         print "(declare-fun initial_free_array () (Array (_ BitVec {0}) (_ BitVec {1})))".format(config.TEAMBITS*2, config.MATCHBITS)
+
+        print "(declare-fun initial_array () (Array (_ BitVec {0}) (_ BitVec {1})))".format(config.TEAMBITS*2, config.MATCHBITS)
+
+        # Alas, we have to zero-initialize the initial array.
+        print "(assert (= initial_array "
+        for i in range(config.NUMTEAMS):
+            for j in range(config.NUMTEAMS):
+                print "(store "
+
+        print "initial_free_array "
+
+        for i in range(config.NUMTEAMS):
+            for j in range(config.NUMTEAMS):
+                print "(_ bv{0} {1}) (_ bv0 {2}) )".format(((i << config.TEAMBITS) + j), array_domain_w, config.MATCHBITS)
+
+        print "))"
+
+
+
         for i in range(config.NUMROUNDS):
             for j in range(config.NUMMATCHES):
                 # Uuuugh
