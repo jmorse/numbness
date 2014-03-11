@@ -52,7 +52,10 @@ class QFBV:
                 pairings_per_game = 6
                 for k in range(games):
                     for l in range(pairings_per_game):
-                        print "(declare-fun faced_array_r{0}_m{1}_g{2}_p{3} () (Array (_ BitVec {4}) (_ BitVec {5})))".format(i, j, k, l, config.TEAMBITS*2, config.MATCHBITS)
+                        print "(declare-fun {0} () (Array (_ BitVec {1}) (_ BitVec {2})))".format(self.faced_name(i, j, k, l), config.TEAMBITS*2, config.MATCHBITS)
+
+    def faced_name(self, i, j , k, l):
+        return "faced_array_r{0}_m{1}_g{2}_p{3}".format(i, j, k, l, config.TEAMBITS*2, config.MATCHBITS)
 
     def project(self, x, y, z):
         return "round_{0}_match_{1}_slot_{2}".format(x, y, z)
